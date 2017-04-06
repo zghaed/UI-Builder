@@ -1,0 +1,52 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<!-- Latest compiled and minified JavaScript -->
+<link rel="stylesheet" type="text/css" href="styles.css">
+<script type="text/javascript" src="jquery-3.2.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="script.js"></script>
+
+<div id="main-div">
+  <div class="flex-container">
+    <div class="flex-item region-one" data-placement="right">
+    </div>
+    <div class="flex-item region-two" data-placement="bottom">
+    </div>
+    <div class="flex-item region-three" data-placement="left">
+    </div>
+    <!-- Action Respond To Review -->
+    <div class="popup-content hide">
+      <label class="form-group">Add components:</label>
+      <!-- Vertical or Horizontal Radio Buttom -->
+      <div class="form-group">
+        <label class="custom-control custom-radio">
+          <input name="horizontal" type="radio" class="custom-control-input" value="0">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-vertical stop-bubble" aria-hidden="true"></span>Vertical
+          </span>
+        </label>
+        <label class="custom-control custom-radio">
+          <input name="horizontal" type="radio" class="custom-control-input" value="1">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>Horizontal
+          </span>
+        </label>
+      </div>
+      <!-- HTML Textarea -->
+      <div class="form-group">
+        <textarea id="content" class="form-control" placeholder="HMTL"></textarea>
+      </div>
+      <!-- N Input -->
+      <div class="form-group">
+        <input type="text" class="form-control" id="number" placeholder="N">
+      </div>
+      <div class="form-group">
+        <button id="applyButton" class="btn btn-primary width100">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>

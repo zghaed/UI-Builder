@@ -11,13 +11,12 @@
 }
 
 .footer {
-  border-style: dotted;
-  border-width: thin;
-  border-color: red;
-  flex: 0 1 40%;
+  border-style: none dashed dashed dashed;
+  border-width: 2px;
+  border-color: lightgrey;
+  flex: 0 1 auto;
   float: right;
   margin-left: auto;
-  /*height: 15%;*/
   display: flex;
   flex-flow: row-reverse nowrap;
   justify-content: flex-start;
@@ -26,14 +25,12 @@
 }
 
 .main {
-  border-style: dotted;
-  border-width: thin;
-  border-color: red;
-  /*height: 60%;*/
+  border-style: dashed;;
+  border-width: 2px;
+  border-color: lightgrey;
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
-  align-items: center;
   align-content: center;
 }
 
@@ -43,9 +40,9 @@
   justify-content: flex-start;
   align-items: flex-start;
   align-content: flex-start;
-  border-style: dotted;
-  border-width: thin;
-  border-color: red;
+  border-style: dashed dashed none dashed;
+  border-width: 2px;
+  border-color: lightgrey;
 }
 
 .header-right {
@@ -54,13 +51,13 @@
   justify-content: flex-start;
   align-items: flex-start;
   align-content: flex-start;
-  border-style: dotted;
-  border-width: thin;
-  border-color: red;
+  border-style: dashed dashed none dashed;
+  border-width: 2px;
+  border-color: lightgrey;
 }
 
 .header {
-  flex: 0 1 40%;
+  flex: 0 1 auto;
   /*height: 15%;*/
 }
 
@@ -73,6 +70,10 @@
 }
 
 .addElement {
+  padding: 1em;
   border-style: dotted;
-  border-width: thin;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  border-width: 2px;
+  border-color: lightgrey;
 }

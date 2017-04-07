@@ -71,3 +71,8 @@
   .main    { order: 3; }
   .footer  { order: 4; }
 }
+
+.addElement {
+  border-style: dotted;
+  border-width: thin;
+}

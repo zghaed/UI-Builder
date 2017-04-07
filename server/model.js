@@ -13,6 +13,10 @@ var Container = c.config.db.define( 'container', {
 	isHorizontal: {
 		type: Sequelize.BOOLEAN,
 		field: 'is_horizontal'
+	},
+	order: {
+		type: Sequelize.INTEGER,
+		field: 'order'
 	}
 } , {
 	timestamps: true

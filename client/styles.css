@@ -3,6 +3,7 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
+  position: relative;
 }
 
 .wrapper > * {
@@ -29,7 +30,7 @@
   border-width: 2px;
   border-color: lightgrey;
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
   justify-content: center;
   align-content: center;
 }
@@ -54,22 +55,23 @@
   border-style: dashed dashed none dashed;
   border-width: 2px;
   border-color: lightgrey;
+  position: absolute;
+  right: 1em;
 }
 
 .header {
   flex: 0 1 auto;
-  /*height: 15%;*/
 }
 
-@media all and (min-width: 800px) {
+/*@media all and (min-width: 800px) {*/
   /*.main    { flex: 3 0px; }*/
   .header-left { order: 1; }
   .header-right { order: 2; }
   .main    { order: 3; }
   .footer  { order: 4; }
-}
+/*}*/
 
-.addElement {
+.add-element {
   padding: 1em;
   border-style: dotted;
   margin-left: 0.5em;

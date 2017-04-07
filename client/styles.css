@@ -17,19 +17,29 @@
   flex: 0 1 40%;
   float: right;
   margin-left: auto;
-  height: 15%;
+  /*height: 15%;*/
+  display: flex;
+  flex-flow: row-reverse nowrap;
+  justify-content: flex-start;
+  align-items: flex-end;
+  align-content: flex-start;
 }
 
 .main {
   border-style: dotted;
   border-width: thin;
   border-color: red;
-  height: 65%;
+  /*height: 60%;*/
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
 }
 
 .header-left {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: flex-start;
   align-content: flex-start;
@@ -40,8 +50,8 @@
 
 .header-right {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-end;
+  flex-flow: row-reverse nowrap;
+  justify-content: flex-start;
   align-items: flex-start;
   align-content: flex-start;
   border-style: dotted;
@@ -51,7 +61,7 @@
 
 .header {
   flex: 0 1 40%;
-  height: 15%;
+  /*height: 15%;*/
 }
 
 @media all and (min-width: 800px) {

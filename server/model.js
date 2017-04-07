@@ -3,7 +3,7 @@ var Sequelize = require('sequelize'),
 
 var Container = c.config.db.define( 'container', {
 	regionNumber: {
-		type: Sequelize.STRING,
+		type: Sequelize.INTEGER,
 		field: 'region_number'
 	},
 	containerContent: {
@@ -14,9 +14,9 @@ var Container = c.config.db.define( 'container', {
 		type: Sequelize.BOOLEAN,
 		field: 'is_horizontal'
 	},
-	order: {
+	groupNumber: {
 		type: Sequelize.INTEGER,
-		field: 'order'
+		field: 'group_number'
 	}
 } , {
 	timestamps: true

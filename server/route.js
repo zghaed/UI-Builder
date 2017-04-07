@@ -25,15 +25,15 @@ var getItem = function(req, res) {
 }
 
 var containerEntry = function(req, res) {
-	var number = req.body.number,
+	var region = req.body.region,
 		content = req.body.content,
 		horizontal = req.body.horizontal,
-		order = req.body.order;
+		group = req.body.group;
 	m.models.container.sync()
 		.then(function() {
 			return 	m.models.container.create({
-				regionNumber: number,
-				order: order,
+				regionNumber: region,
+				groupNumber: group,
 				containerContent: content,
 				isHorizontal: horizontal
 			});

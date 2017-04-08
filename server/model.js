@@ -2,9 +2,9 @@ var Sequelize = require('sequelize'),
 	c = require('./conf');
 
 var Container = c.config.db.define( 'container', {
-	regionNumber: {
-		type: Sequelize.INTEGER,
-		field: 'region_number'
+	boxName: {
+		type: Sequelize.STRING,
+		field: 'box_name'
 	},
 	containerContent: {
 		type: Sequelize.TEXT,

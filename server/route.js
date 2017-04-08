@@ -25,14 +25,14 @@ var getItem = function(req, res) {
 }
 
 var containerEntry = function(req, res) {
-	var region = req.body.region,
+	var box = req.body.box,
 		content = req.body.content,
 		horizontal = req.body.horizontal,
 		group = req.body.group;
 	m.models.container.sync()
 		.then(function() {
 			return 	m.models.container.create({
-				regionNumber: region,
+				boxName: box,
 				groupNumber: group,
 				containerContent: content,
 				isHorizontal: horizontal

@@ -80,6 +80,10 @@
   max-width: 50%;
 }
 
+.popover-title {
+  border: none;
+}
+
 textarea#content,
 textarea#data {
   width: 400px;

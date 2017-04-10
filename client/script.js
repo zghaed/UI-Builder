@@ -1,9 +1,4 @@
 $(document).ready(function() {
-  // var headerHeight = $('.header').outerHeight();
-  // var footerHeight = $('.footer').outerHeight();
-  // var totalHeight = $('body').outerHeight();
-  // var mainHeight = (totalHeight - (headerHeight + footerHeight + 32 )) / totalHeight * 100;
-  // $('.main').outerHeight(mainHeight+'%');
   $.ajax({
     type: 'GET',
     url: 'http://localhost:8000/api/containers',
@@ -13,25 +8,33 @@ $(document).ready(function() {
       var boxes = {'top-left-box':[], 'top-right-box':[], 'middle-box':[], 'bottom-right-box':[]};
       for(var i = 0; i < data.length; i++) {
         var boxName = data[i].boxName;
-        console.log(data[i]);
         boxes[boxName].push(data[i]);
       }
       //Sort each box based on their group number
       for (var i in boxes) {
-      //  console.log(boxes[i]);
         boxes[i].sort(function (a, b) {
           return a.groupNumber - b.groupNumber;
         });
+        var boxId = '#' + i ;
+        var minOrder = 0;
+        var maxOrder = 0;
         for (j in boxes[i]) {
-          var boxId = '#' + i ;
-          console.log($(boxId).html());
+          //Add containers to each box
           var newContainers = "<div style='order:" + boxes[i][j].groupNumber + ";'>" + boxes[i][j].containerContent + "</div>";
-          var second = boxId + ">div:eq(1)";
+          var second = boxId + ">div:eq(0)";
           $(second).after(newContainers);
+          if (boxes[i][j].groupNumber < minOrder)
+            minOrder = boxes[i][j].groupNumber;
+          if (boxes[i][j].groupNumber > maxOrder)
+            maxOrder = boxes[i][j].groupNumber;
+        }
+        $(boxId).children(":first").css("order",  minOrder);
+        if (boxes[i].length > 0) {
+          $(boxId).children(":last").css("order",  maxOrder);
+        } else {
+          $(boxId).children(":last").css("display",  "none");
         }
       }
-
-      console.log(boxes);
     },
     error: function(data) {
       alert('There was an error');

@@ -1,3 +1,4 @@
+<head>
 <!-- Test 4 -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <!-- Optional theme -->
@@ -6,43 +7,47 @@
 <link rel="stylesheet" type="text/css" href="styles.css">
 
 <script type="text/javascript" src="jquery-3.2.0.min.js"></script>
+<script type="text/javascript" src="handlebars-v4.0.5.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script type="text/javascript" src="script.js"></script>
+</head>
 
+<body>
 <div class="wrapper">
   <div class="box" id="top-left-box">
-    <div class="add-element" data-placement="right" style="order:0;">Add</div>
-    <div class="add-element" data-placement="right" style="order:0;">Add</div>
+    <div class="add-element" id="top-left-box-start" data-placement="right" style="order:0;">Add</div>
+    <div class="add-element" id="top-left-box-end" data-placement="right" style="order:0;">Add</div>
   </div>
 
   <div class="box" id="top-right-box">
-    <div class="add-element" data-placement="bottom" style="order:0;">Add</div>
-    <div class="add-element" data-placement="bottom" style="order:0;">Add</div>
+    <div class="add-element" id="top-right-box-start" data-placement="bottom" style="order:0;">Add</div>
+    <div class="add-element" id="top-right-box-end" data-placement="bottom" style="order:0;">Add</div>
   </div>
 
   <div class="box" id="middle-box">
-    <div class="add-element" data-placement="bottom" style="order:0;">Add</div>
-    <div class="add-element" data-placement="bottom" style="order:0;">Add</div>
+    <div class="add-element" id="middle-box-start" data-placement="bottom" style="order:0;">Add</div>
+    <div class="add-element" id="middle-box-end" data-placement="bottom" style="order:0;">Add</div>
   </div>
 
   <div class="box" id="bottom-right-box">
-    <div class="add-element"  data-placement="left">Add</div>
-    <div class="add-element" data-placement="left">Add</div>
+    <div class="add-element" id="bottom-right-box-start" data-placement="left">Add</div>
+    <div class="add-element" id="bottom-right-box-end" data-placement="left">Add</div>
   </div>
 
   <div class="popup-content hide">
     <label class="form-group">Add components:</label>
     <!-- HTML Textarea -->
     <div class="form-group">
-      <textarea id="content" class="form-control" placeholder="HMTL"></textarea>
+      <textarea id="content" class="form-control" type="text/x-handlebars-template" placeholder="HMTL"></textarea>
     </div>
     <!-- Data Input -->
     <div class="form-group">
       <textarea id="data" class="form-control" placeholder="Data"></textarea>
     </div>
     <div class="form-group">
-      <button id="applyButton" class="btn btn-primary width100">Apply</button>
+      <button type="button" id="apply-button" class="btn btn-primary">Apply</button>
+      <button type="button" class="btn btn-default" onclick="$('.add-element').popover('hide');">Cancel</button>
     </div>
   </div> <!-- End of popover div -->
-
-</div>
+</div> <!-- End of wrapper div -->
+</body>

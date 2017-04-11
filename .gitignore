@@ -1,3 +1,4 @@
 node_modules/
 client/jquery-3.2.0.min.js
+client/handlebars-v4.0.5.js
 data.sqlite

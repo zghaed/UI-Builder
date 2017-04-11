@@ -44,9 +44,8 @@ $(document).ready(function() {
 
   $('.add-element').popover({
     html: true,
-    title : '<button type="button" class="close" onclick="$(&quot;.add-element&quot;).popover(&quot;hide&quot;);">&times;</button>',
+    title : function() { return $(this).attr('id'); },
     trigger: 'manual',
-    container: 'body',
     content: function () {
       if (!event)
         var event = window.event;
@@ -67,5 +66,38 @@ $(document).ready(function() {
     //Toggle popover by clicking on the items (4 main area)
     $(this).popover('toggle');
     $('.add-element').not(this).popover('hide');
+  });
+
+  $('body').on('click', '#apply-button', function(event){
+    var theTemplateScript = $('textarea#content').val();
+    var data = $('textarea#data').val();
+    var theTemplate = Handlebars.compile(theTemplateScript);
+    var jsonData = (data === "") ? "" : JSON.parse(data);
+    var theCompiledHTML = theTemplate(jsonData);
+    var idArray = $('.popover-title').html().split('-');
+    var location = idArray.pop();
+    var boxName = idArray.join('-');
+    var boxElement = $('#'+boxName);
+    var horizontal = 1;
+    var groupNumber;
+    if (location === "start") {
+      groupNumber = boxElement.children(":first").css("order") - 1;
+    } else {
+      groupNumber = boxElement.children(":last").css("order") + 1;
+    }
+    var params = 'content=' + theCompiledHTML + '&box=' + boxName + '&horizontal=' + horizontal + '&group=' + groupNumber;
+
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:8000/api/container",
+      data: params,
+      success: function(data) {
+        alert('successful');
+      },
+      error: function(data) {
+        alert('There was an error submitting the form');
+        alert(data);
+      }
+    });//End of Ajax call
   });
 });

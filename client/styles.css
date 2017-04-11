@@ -35,6 +35,7 @@
   order: 3;
   justify-content: flex-start;
   align-content: flex-start;
+  height: 70%;
 }
 
 #top-left-box {

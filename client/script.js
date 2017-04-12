@@ -45,33 +45,7 @@ $(document).ready(function() {
     }
   });
 
-  $('.add-element').popover({
-    html: true,
-    title : function() { return $(this).attr('id'); },
-    trigger: 'manual',
-    content: function () {
-      if (!event)
-        var event = window.event;
-      event.cancelBubble = true;
-      if (event.stopPropagation)
-        event.stopPropagation();
-      event.preventDefault();
-      return $('.popup-content').html();
-    }
-  }).on('click',function(event) {
-    //Stop propagation
-    if (!event)
-      var event = window.event;
-    event.cancelBubble = true;
-    if (event.stopPropagation)
-      event.stopPropagation();
-    event.preventDefault();
-    //Toggle popover by clicking on the items (4 main area)
-    $(this).popover('toggle');
-    $('.add-element').not(this).popover('hide');
-  });
-
-  $('body').on('click', '#apply-button', function(event){
+  $('.box').on('click', '#apply-button', function(){
     var theTemplateScript = $('textarea#content').val();
     var data = $('textarea#data').val();
     var theTemplate = Handlebars.compile(theTemplateScript);
@@ -85,8 +59,6 @@ $(document).ready(function() {
     var horizontal = 1;
     var groupNumber;
     var addOrder = $('#'+addId).css('order');
-    console.log('add order:');
-    console.log(addOrder);
     if (location === 'start') {
       console.log('------start location-----');
       //two conditions if the first element or not
@@ -94,41 +66,42 @@ $(document).ready(function() {
         //First group to add
         console.log('First group to add');
         groupNumber = addOrder;
-        $('#'+addId).css('order', addOrder - 1);
+        $('#'+addId).css('order', parseInt(addOrder) - parseInt(1));
         console.log(groupNumber);
         var endAdd = '#' + boxName + '-end';
-        $(endAdd).css('order', addOrder + 1);
+        $(endAdd).css('order', parseInt(addOrder) + parseInt(1));
         //TODO: Maybe I shouldn't show before successful
         $(endAdd).show();
       } else {
         //None empty box
         console.log('none empty box to add');
-        groupNumber = addOrder - 1;
-        $('#'+addId).css('order', addOrder - 2);
+        groupNumber = addOrder - parseInt(1);
+        $('#'+addId).css('order', parseInt(addOrder) - parseInt(2));
         console.log(groupNumber);
         //TODO: Id should be unique
         var middleAddId = boxName + '-middle';
-        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" style="order:' + addOrder + ';">Add</div>';
+        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + addOrder + ';">Add</div>';
         $('#'+addId).after(middleAddElement);
       }
     } else if (location === 'middle') {
       //TODO: NEED TO REORDER ALL ELEMENTS AFTER THE NEW MIDDLE ADD --> if ajax request is successful
       console.log('------middle location------');
-      groupNumber = addOrder + 1;
+      groupNumber = parseInt(addOrder) + parseInt(1);
       $('#'+addId).css('order', addOrder);
       console.log(groupNumber);
       var middleAddId = boxName + '-middle';
-      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" style="order:' + (parseInt(addOrder)+2) + ';">Add</div>';
+      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + (parseInt(addOrder)+parseInt(2)) + ';">Add</div>';
       $('#'+addId).after(middleAddElement);
     } else {
       console.log('-------end location-------');
-      groupNumber = addOrder + 1;
-      $('#'+addId).css('order', addOrder + 2);
+      groupNumber = parseInt(addOrder) + parseInt(1);
+      $('#'+addId).css('order', parseInt(addOrder) + parseInt(2));
       console.log(groupNumber);
       var middleAddId = boxName + '-middle';
-      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" style="order:' + addOrder + ';">Add</div>';
+      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + addOrder + ';">Add</div>';
       $(middleAddElement).insertBefore(('#'+addId));
     }
+
     var params = 'content=' + theCompiledHTML + '&box=' + boxName + '&horizontal=' + horizontal + '&group=' + groupNumber;
 
     $.ajax({
@@ -146,7 +119,7 @@ $(document).ready(function() {
           $('#'+addId).after(newDivString);
         } else {
           console.log('----inside ajax end----');
-          $(newDivString).after('#'+addId);
+          $(newDivString).insertBefore('#'+addId);
         }
         $('.add-element').popover('hide');
       },
@@ -155,5 +128,37 @@ $(document).ready(function() {
         alert(data);
       }
     });//End of Ajax call
-  });
+  });//End of apply button
+
+  var popOverSettings = {
+    html: true,
+    title : function() { return $(this).attr('id'); },
+    trigger: 'manual',
+  //  selector: '.add-element',
+    content: function () {
+      if (!event)
+        var event = window.event;
+      event.cancelBubble = true;
+      if (event.stopPropagation)
+        event.stopPropagation();
+      event.preventDefault();
+      return $('.popup-content').html();
+    }
+  }
+
+  $('.add-element').popover(popOverSettings)
+    .on('click',function(event) {
+      console.log('add element is clicked');
+      //Stop propagation
+      if (!event)
+        var event = window.event;
+      event.cancelBubble = true;
+      if (event.stopPropagation)
+        event.stopPropagation();
+      event.preventDefault();
+      //Toggle popover by clicking on the items (4 main area)
+      $(this).popover('toggle');
+      $('.add-element').not(this).popover('hide');
+    });
+
 });

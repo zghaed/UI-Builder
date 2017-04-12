@@ -31,7 +31,7 @@ $(document).ready(function() {
             maxOrder = boxes[i][j].groupNumber + 1;
         }
         $(boxId).children(':first').css('order',  minOrder);
-        console.log(boxes[i].length);
+
         if (boxes[i].length > 0) {
           $(boxId).children(':last').css('order',  maxOrder);
         } else {
@@ -44,6 +44,35 @@ $(document).ready(function() {
       alert(data);
     }
   });
+
+  var popOverSettings = {
+    html: true,
+    title : function() { return $(this).attr('id'); },
+    trigger: 'manual',
+    content: function () {
+      if (!event)
+        var event = window.event;
+      event.cancelBubble = true;
+      if (event.stopPropagation)
+        event.stopPropagation();
+      event.preventDefault();
+      return $('.popup-content').html();
+    }
+  }
+
+  $('.add-element').popover(popOverSettings)
+    .on('click',function(event) {
+      //Stop propagation
+      if (!event)
+        var event = window.event;
+      event.cancelBubble = true;
+      if (event.stopPropagation)
+        event.stopPropagation();
+      event.preventDefault();
+      //Toggle popover by clicking on the items (4 main area)
+      $(this).popover('toggle');
+      $('.add-element').not(this).popover('hide');
+    });
 
   $('.box').on('click', '#apply-button', function(){
     var theTemplateScript = $('textarea#content').val();
@@ -67,7 +96,6 @@ $(document).ready(function() {
         console.log('First group to add');
         groupNumber = addOrder;
         $('#'+addId).css('order', parseInt(addOrder) - parseInt(1));
-        console.log(groupNumber);
         var endAdd = '#' + boxName + '-end';
         $(endAdd).css('order', parseInt(addOrder) + parseInt(1));
         //TODO: Maybe I shouldn't show before successful
@@ -77,29 +105,67 @@ $(document).ready(function() {
         console.log('none empty box to add');
         groupNumber = addOrder - parseInt(1);
         $('#'+addId).css('order', parseInt(addOrder) - parseInt(2));
-        console.log(groupNumber);
         //TODO: Id should be unique
         var middleAddId = boxName + '-middle';
         var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + addOrder + ';">Add</div>';
+
         $('#'+addId).after(middleAddElement);
+        $('#'+middleAddId).popover(popOverSettings)
+          .on('click',function(event) {
+            //Stop propagation
+            if (!event)
+              var event = window.event;
+            event.cancelBubble = true;
+            if (event.stopPropagation)
+              event.stopPropagation();
+            event.preventDefault();
+            //Toggle popover by clicking on the items (4 main area)
+            $(this).popover('toggle');
+            $('.add-element').not(this).popover('hide');
+          });
       }
     } else if (location === 'middle') {
       //TODO: NEED TO REORDER ALL ELEMENTS AFTER THE NEW MIDDLE ADD --> if ajax request is successful
       console.log('------middle location------');
       groupNumber = parseInt(addOrder) + parseInt(1);
       $('#'+addId).css('order', addOrder);
-      console.log(groupNumber);
       var middleAddId = boxName + '-middle';
       var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + (parseInt(addOrder)+parseInt(2)) + ';">Add</div>';
       $('#'+addId).after(middleAddElement);
+      $('#'+middleAddId).popover(popOverSettings)
+        .on('click',function(event) {
+          //Stop propagation
+          if (!event)
+            var event = window.event;
+          event.cancelBubble = true;
+          if (event.stopPropagation)
+            event.stopPropagation();
+          event.preventDefault();
+          //Toggle popover by clicking on the items (4 main area)
+          $(this).popover('toggle');
+          $('.add-element').not(this).popover('hide');
+        });
     } else {
       console.log('-------end location-------');
       groupNumber = parseInt(addOrder) + parseInt(1);
       $('#'+addId).css('order', parseInt(addOrder) + parseInt(2));
-      console.log(groupNumber);
       var middleAddId = boxName + '-middle';
       var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + addOrder + ';">Add</div>';
-      $(middleAddElement).insertBefore(('#'+addId));
+
+      $('#'+addId).after(middleAddElement);
+      $('#'+middleAddId).popover(popOverSettings)
+        .on('click',function(event) {
+          //Stop propagation
+          if (!event)
+            var event = window.event;
+          event.cancelBubble = true;
+          if (event.stopPropagation)
+            event.stopPropagation();
+          event.preventDefault();
+          //Toggle popover by clicking on the items (4 main area)
+          $(this).popover('toggle');
+          $('.add-element').not(this).popover('hide');
+        });
     }
 
     var params = 'content=' + theCompiledHTML + '&box=' + boxName + '&horizontal=' + horizontal + '&group=' + groupNumber;
@@ -129,36 +195,4 @@ $(document).ready(function() {
       }
     });//End of Ajax call
   });//End of apply button
-
-  var popOverSettings = {
-    html: true,
-    title : function() { return $(this).attr('id'); },
-    trigger: 'manual',
-  //  selector: '.add-element',
-    content: function () {
-      if (!event)
-        var event = window.event;
-      event.cancelBubble = true;
-      if (event.stopPropagation)
-        event.stopPropagation();
-      event.preventDefault();
-      return $('.popup-content').html();
-    }
-  }
-
-  $('.add-element').popover(popOverSettings)
-    .on('click',function(event) {
-      console.log('add element is clicked');
-      //Stop propagation
-      if (!event)
-        var event = window.event;
-      event.cancelBubble = true;
-      if (event.stopPropagation)
-        event.stopPropagation();
-      event.preventDefault();
-      //Toggle popover by clicking on the items (4 main area)
-      $(this).popover('toggle');
-      $('.add-element').not(this).popover('hide');
-    });
-
 });

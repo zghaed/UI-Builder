@@ -83,6 +83,10 @@ $(document).ready(function() {
     var addId = $('.popover-title').html();
     var addIdArray = addId.split('-');
     var location = addIdArray.pop();
+    //For middle box add elements
+    if (location === 'middle') {
+      addIdArray.pop();
+    }
     var boxName = addIdArray.join('-');
     var boxElement = $('#'+boxName);
     var horizontal = 1;
@@ -95,18 +99,17 @@ $(document).ready(function() {
         //First group to add
         console.log('First group to add');
         groupNumber = addOrder;
-        $('#'+addId).css('order', parseInt(addOrder) - parseInt(1));
+        $('#'+addId).css('order', parseInt(addOrder) - 1);
         var endAdd = '#' + boxName + '-end';
-        $(endAdd).css('order', parseInt(addOrder) + parseInt(1));
+        $(endAdd).css('order', parseInt(addOrder) + 1);
         //TODO: Maybe I shouldn't show before successful
         $(endAdd).show();
       } else {
         //None empty box
         console.log('none empty box to add');
         groupNumber = addOrder - parseInt(1);
-        $('#'+addId).css('order', parseInt(addOrder) - parseInt(2));
-        //TODO: Id should be unique
-        var middleAddId = boxName + '-middle';
+        $('#'+addId).css('order', parseInt(addOrder) - 2);
+        var middleAddId = boxName + '-' + addOrder + '-middle';
         var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + addOrder + ';">Add</div>';
 
         $('#'+addId).after(middleAddElement);
@@ -127,10 +130,11 @@ $(document).ready(function() {
     } else if (location === 'middle') {
       //TODO: NEED TO REORDER ALL ELEMENTS AFTER THE NEW MIDDLE ADD --> if ajax request is successful
       console.log('------middle location------');
-      groupNumber = parseInt(addOrder) + parseInt(1);
+      groupNumber = parseInt(addOrder) + 1;
       $('#'+addId).css('order', addOrder);
-      var middleAddId = boxName + '-middle';
-      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + (parseInt(addOrder)+parseInt(2)) + ';">Add</div>';
+      var middleAddOrder = parseInt(addOrder) + 2;
+      var middleAddId = boxName + '-' + middleAddOrder + '-middle';
+      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + middleAddOrder + ';">Add</div>';
       $('#'+addId).after(middleAddElement);
       $('#'+middleAddId).popover(popOverSettings)
         .on('click',function(event) {
@@ -147,9 +151,9 @@ $(document).ready(function() {
         });
     } else {
       console.log('-------end location-------');
-      groupNumber = parseInt(addOrder) + parseInt(1);
-      $('#'+addId).css('order', parseInt(addOrder) + parseInt(2));
-      var middleAddId = boxName + '-middle';
+      groupNumber = parseInt(addOrder) + 1;
+      $('#'+addId).css('order', parseInt(addOrder) + 2);
+      var middleAddId = boxName + '-'+ addOrder + '-middle';
       var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + addOrder + ';">Add</div>';
 
       $('#'+addId).after(middleAddElement);

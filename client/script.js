@@ -22,7 +22,7 @@ $(document).ready(function() {
         });
         for (j in boxes[i]) {
           //Add containers to each box
-          var newContainers = "<div style='order:" + boxes[i][j].groupNumber + ";'>" + boxes[i][j].containerContent + "</div>";
+          var newContainers = "<div class='group' style='order:" + boxes[i][j].groupNumber + ";'>" + boxes[i][j].containerContent + "</div>";
           var second = boxId + ">div:eq(0)";
           $(second).after(newContainers);
           if (boxes[i][j].groupNumber <= minOrder)
@@ -31,6 +31,7 @@ $(document).ready(function() {
             maxOrder = boxes[i][j].groupNumber + 1;
         }
         $(boxId).children(':first').css('order',  minOrder);
+        console.log(boxes[i].length);
         if (boxes[i].length > 0) {
           $(boxId).children(':last').css('order',  maxOrder);
         } else {
@@ -83,11 +84,50 @@ $(document).ready(function() {
     var boxElement = $('#'+boxName);
     var horizontal = 1;
     var groupNumber;
-
+    var addOrder = $('#'+addId).css('order');
+    console.log('add order:');
+    console.log(addOrder);
     if (location === 'start') {
-      groupNumber = $('#'+addId).css('order');
+      console.log('------start location-----');
+      //two conditions if the first element or not
+      if (boxElement.children().length === 3) { //Start add, Popover === 2
+        //First group to add
+        console.log('First group to add');
+        groupNumber = addOrder;
+        $('#'+addId).css('order', addOrder - 1);
+        console.log(groupNumber);
+        var endAdd = '#' + boxName + '-end';
+        $(endAdd).css('order', addOrder + 1);
+        //TODO: Maybe I shouldn't show before successful
+        $(endAdd).show();
+      } else {
+        //None empty box
+        console.log('none empty box to add');
+        groupNumber = addOrder - 1;
+        $('#'+addId).css('order', addOrder - 2);
+        console.log(groupNumber);
+        //TODO: Id should be unique
+        var middleAddId = boxName + '-middle';
+        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" style="order:' + addOrder + ';">Add</div>';
+        $('#'+addId).after(middleAddElement);
+      }
+    } else if (location === 'middle') {
+      //TODO: NEED TO REORDER ALL ELEMENTS AFTER THE NEW MIDDLE ADD --> if ajax request is successful
+      console.log('------middle location------');
+      groupNumber = addOrder + 1;
+      $('#'+addId).css('order', addOrder);
+      console.log(groupNumber);
+      var middleAddId = boxName + '-middle';
+      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" style="order:' + (parseInt(addOrder)+2) + ';">Add</div>';
+      $('#'+addId).after(middleAddElement);
     } else {
-      groupNumber = $('#'+addId).css('order');
+      console.log('-------end location-------');
+      groupNumber = addOrder + 1;
+      $('#'+addId).css('order', addOrder + 2);
+      console.log(groupNumber);
+      var middleAddId = boxName + '-middle';
+      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" style="order:' + addOrder + ';">Add</div>';
+      $(middleAddElement).insertBefore(('#'+addId));
     }
     var params = 'content=' + theCompiledHTML + '&box=' + boxName + '&horizontal=' + horizontal + '&group=' + groupNumber;
 
@@ -96,21 +136,17 @@ $(document).ready(function() {
       url: 'http://localhost:8000/api/container',
       data: params,
       success: function(data) {
-        var newDivString = '<div style="order:' + groupNumber + '">' + theCompiledHTML + '</div>';
-        var newDiv = $(newDivString);
+        var newDivString = '<div class="group" style="order:' + groupNumber + ';">' + theCompiledHTML + '</div>';
 
         if (location === 'start') {
-          $('#'+addId).css('order', parseInt(groupNumber)-1);
-          var second = '#' + boxName + '>div:eq(0)';
-          $(second).after(newDiv);
-          if (boxElement.children().length === 4) {
-            var boxEnd = '#' + boxName + '-end';
-            $(boxEnd).css('order', parseInt(groupNumber)+1);
-            $(boxEnd).show();
-          }
+          console.log('----inside ajax start----');
+          $('#'+addId).after(newDivString);
+        } else if (location === 'middle') {
+          console.log('----inside ajax middle----');
+          $('#'+addId).after(newDivString);
         } else {
-          $('#'+addId).css('order', parseInt(groupNumber)+1);
-          newDiv.insertBefore($('#'+addId));
+          console.log('----inside ajax end----');
+          $(newDivString).after('#'+addId);
         }
         $('.add-element').popover('hide');
       },

@@ -11,11 +11,26 @@ var getContainers = function(req, res) {
 	});
 };
 
-var getItem = function(req, res) {
+var getContainerById = function(req, res) {
 	var id = req.params.id;
 	m.models.container.findOne({
 		where: {
 			id: id
+		}
+	}).then(function(result){
+		res.send(result);
+	}, function(err){
+		console.log(err);
+	});
+};
+
+var getContainerByName = function(req, res) {
+	var box = req.body.box,
+		group = req.body.group;
+	m.models.container.findOne({
+		where: {
+			groupNumber: group,
+			boxName: box
 		}
 	}).then(function(result){
 		res.send(result);
@@ -102,8 +117,9 @@ var containerDelete = function(req, res) {
 
 exports.routes = {
 	getContainers: getContainers,
-	getItem: getItem,
+	getContainerById: getContainerById,
 	containerEntry: containerEntry,
 	containerDelete: containerDelete,
-	containerUpdate: containerUpdate
+	containerUpdate: containerUpdate,
+	getContainerByName: getContainerByName
 };

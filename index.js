@@ -13,10 +13,12 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
-}));
+	})
+);
 
 app.get('/api/containers', r.routes.getContainers);
-app.get('/api/container/:id', r.routes.getItem);
+app.get('/api/container/:id', r.routes.getContainerById);
+app.post('/api/container', r.routes.getContainerByName);
 app.post('/api/container', r.routes.containerEntry);
 app.delete('/api/container/:id', r.routes.containerDelete);
 app.post('/api/container/:id', r.routes.containerUpdate);

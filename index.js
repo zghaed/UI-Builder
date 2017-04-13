@@ -19,6 +19,7 @@ app.get('/api/containers', r.routes.getContainers);
 app.get('/api/container/:id', r.routes.getItem);
 app.post('/api/container', r.routes.containerEntry);
 app.delete('/api/container/:id', r.routes.containerDelete);
+app.post('/api/container/:id', r.routes.containerUpdate);
 
 app.listen(8000, function() {
 	console.log('server is running');

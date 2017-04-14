@@ -77,10 +77,10 @@ var containerUpdate = function(req, res) {
 		}
 		return container
 		.updateAttributes({
-				boxName: box,
-				groupNumber: group,
-				containerContent: content,
-				isHorizontal: horizontal
+			boxName: box,
+			groupNumber: group,
+			containerContent: content,
+			isHorizontal: horizontal
 		}).then(function(result){
 			console.log('successful');
 			console.log(result);

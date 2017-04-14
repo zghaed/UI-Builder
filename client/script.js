@@ -93,11 +93,9 @@ $(document).ready(function() {
     var groupNumber;
     var addOrder = $('#'+addId).css('order');
     if (location === 'start') {
-      console.log('------start location-----');
       //two conditions if the first element or not
       if (boxElement.children().length === 3) { //Start add, Popover === 2
         //First group to add
-        console.log('First group to add');
         groupNumber = addOrder;
         $('#'+addId).css('order', parseInt(addOrder) - 1);
         var endAdd = '#' + boxName + '-end';
@@ -106,7 +104,6 @@ $(document).ready(function() {
         $(endAdd).show();
       } else {
         //None empty box
-        console.log('none empty box to add');
         groupNumber = addOrder - parseInt(1);
         $('#'+addId).css('order', parseInt(addOrder) - 2);
         var middleAddId = boxName + '-' + addOrder + '-middle';
@@ -129,12 +126,52 @@ $(document).ready(function() {
       }
     } else if (location === 'middle') {
       //TODO: NEED TO REORDER ALL ELEMENTS AFTER THE NEW MIDDLE ADD --> if ajax request is successful
-      console.log('------middle location------');
       groupNumber = parseInt(addOrder) + 1;
       $('#'+addId).css('order', addOrder);
       var middleAddOrder = parseInt(addOrder) + 2;
       var middleAddId = boxName + '-' + middleAddOrder + '-middle';
       var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + middleAddOrder + ';">Add</div>';
+      for (var i=0; i<boxElement.children().length; i++) {
+        var child = $(boxElement.children()[i]);
+        if (parseInt(child.css('order')) > parseInt(addOrder)) {
+          var childOrder = child.css('order');
+          if (child.hasClass('group')) {
+            var params = 'box=' + boxName + '&group=' + childOrder;
+            var return_first;
+            $.ajax({
+              type: 'POST',
+              url: 'http://localhost:8000/api/container',
+              data: params,
+              success: function(data) {
+                callback(data);
+              },
+              error: function(data) {
+                alert('There was an error submitting the form');
+                alert(data);
+              }
+            });//End of Ajax call
+            function callback(response) {
+              var id = response.id;
+              var newOrder = parseInt(childOrder) + 2;
+              var params = 'group=' + newOrder;
+              $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8000/api/container/update/'+id,
+                data: params,
+                success: function(data) {
+                  console.log('successfully update the order');
+                  console.log(data);
+                },
+                error: function(data) {
+                  alert('There was an error submitting the form');
+                  alert(data);
+                }
+              });//End of Ajax call
+            }//End of callback
+          }//end of if for groups
+          child.css('order', parseInt(childOrder) + 2);
+        }//End of if for orders
+      }//End of for
       $('#'+addId).after(middleAddElement);
       $('#'+middleAddId).popover(popOverSettings)
         .on('click',function(event) {
@@ -150,7 +187,6 @@ $(document).ready(function() {
           $('.add-element').not(this).popover('hide');
         });
     } else {
-      console.log('-------end location-------');
       groupNumber = parseInt(addOrder) + 1;
       $('#'+addId).css('order', parseInt(addOrder) + 2);
       var middleAddId = boxName + '-'+ addOrder + '-middle';
@@ -176,19 +212,16 @@ $(document).ready(function() {
 
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:8000/api/container',
+      url: 'http://localhost:8000/api/container/add',
       data: params,
       success: function(data) {
         var newDivString = '<div class="group" style="order:' + groupNumber + ';">' + theCompiledHTML + '</div>';
 
         if (location === 'start') {
-          console.log('----inside ajax start----');
           $('#'+addId).after(newDivString);
         } else if (location === 'middle') {
-          console.log('----inside ajax middle----');
           $('#'+addId).after(newDivString);
         } else {
-          console.log('----inside ajax end----');
           $(newDivString).insertBefore('#'+addId);
         }
         $('.add-element').popover('hide');

@@ -24,7 +24,7 @@ app.post('/api/container/add', r.routes.containerEntry);
 
 app.delete('/api/container/delete/:id', r.routes.containerDelete);
 
-app.put('/api/container/update/:id', r.routes.containerUpdate);
+app.post('/api/container/update/:id', r.routes.containerUpdate);
 
 app.listen(8000, function() {
 	console.log('server is running');

@@ -1,7 +1,7 @@
 var express = require('express'),
 	r = require('./server/route.js'),
 	app = express(),
-	bodyParser = require('body-parser')
+	bodyParser = require('body-parser');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

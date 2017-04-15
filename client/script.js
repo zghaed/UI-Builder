@@ -7,9 +7,9 @@ $(document).ready(function() {
       //Group all containers in 4 arrays based on their box name
       var boxes = {'top-left-box':[], 'top-right-box':[], 'middle-box':[], 'bottom-right-box':[]};
 
-      for(var i = 0; i < data.length; i++) {
-        var boxName = data[i].boxName;
-        boxes[boxName].push(data[i]);
+      for(var index = 0; index < data.length; i++) {
+        var boxName = data[index].boxName;
+        boxes[boxName].push(data[index]);
       }
       //Sort each box based on their group number
       for (var i in boxes) {
@@ -177,7 +177,7 @@ $(document).ready(function() {
         .on('click',function(event) {
           //Stop propagation
           if (!event)
-            var event = window.event;
+            event = window.event;
           event.cancelBubble = true;
           if (event.stopPropagation)
             event.stopPropagation();

@@ -85,8 +85,8 @@
   border: none;
 }
 
-textarea#content,
-textarea#data {
+#content,
+#data {
   width: 600px;
   height: 200px;
 }

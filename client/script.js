@@ -20,7 +20,7 @@ $(document).ready(function() {
         boxes[i].sort(function (a, b) {
           return a.groupNumber - b.groupNumber;
         });
-        for (j in boxes[i]) {
+        for (var j in boxes[i]) {
           //Add containers to each box
           var newContainers = "<div class='group' style='order:" + boxes[i][j].groupNumber + ";'>" + boxes[i][j].containerContent + "</div>";
           var second = boxId + ">div:eq(0)";
@@ -49,22 +49,22 @@ $(document).ready(function() {
     html: true,
     title : function() { return $(this).attr('id'); },
     trigger: 'manual',
-    content: function () {
+    content: function (event) {
       if (!event)
-        var event = window.event;
+        event = window.event;
       event.cancelBubble = true;
       if (event.stopPropagation)
         event.stopPropagation();
       event.preventDefault();
       return $('.popup-content').html();
     }
-  }
+  };
 
   $('.add-element').popover(popOverSettings)
     .on('click',function(event) {
       //Stop propagation
       if (!event)
-        var event = window.event;
+        event = window.event;
       event.cancelBubble = true;
       if (event.stopPropagation)
         event.stopPropagation();
@@ -114,7 +114,7 @@ $(document).ready(function() {
           .on('click',function(event) {
             //Stop propagation
             if (!event)
-              var event = window.event;
+              event = window.event;
             event.cancelBubble = true;
             if (event.stopPropagation)
               event.stopPropagation();
@@ -197,7 +197,7 @@ $(document).ready(function() {
         .on('click',function(event) {
           //Stop propagation
           if (!event)
-            var event = window.event;
+            event = window.event;
           event.cancelBubble = true;
           if (event.stopPropagation)
             event.stopPropagation();

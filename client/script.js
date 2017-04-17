@@ -7,7 +7,7 @@ $(document).ready(function() {
       //Group all containers in 4 arrays based on their box name
       var boxes = {'top-left-box':[], 'top-right-box':[], 'middle-box':[], 'bottom-right-box':[]};
 
-      for(var index = 0; index < data.length; i++) {
+      for(var index = 0; index < data.length; index++) {
         var boxName = data[index].boxName;
         boxes[boxName].push(data[index]);
       }
@@ -22,9 +22,17 @@ $(document).ready(function() {
         });
         for (var j in boxes[i]) {
           //Add containers to each box
+          var middleAddOrder = parseInt(boxes[i][j].groupNumber) + 1;
+          var middleAddId = i + '-' + middleAddOrder + '-middle';
+          var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + middleAddOrder
+            + ';">Add</div>';
           var newContainers = "<div class='group' style='order:" + boxes[i][j].groupNumber + ";'>" + boxes[i][j].containerContent + "</div>";
+          if (j < boxes[i].length-1)
+            newContainers += middleAddElement;
           var second = boxId + ">div:eq(0)";
           $(second).after(newContainers);
+          $(newContainers).after('<h3>h3</h3>');
+
           if (boxes[i][j].groupNumber <= minOrder)
             minOrder = boxes[i][j].groupNumber - 1;
           if (boxes[i][j].groupNumber >= maxOrder)

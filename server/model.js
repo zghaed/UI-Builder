@@ -24,4 +24,4 @@ var Container = c.config.db.define( 'container', {
 
 exports.models = {
 	container: Container
-}
+};

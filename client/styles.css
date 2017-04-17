@@ -18,7 +18,7 @@
   display: flex;
 }
 
-#bottom-right-box {
+#bottom_right_box {
   border-top-style: none;
   flex: 0 1 auto;
   order: 4;
@@ -30,7 +30,7 @@
   align-content: flex-start;
 }
 
-#middle-box {
+#middle_box {
   flex-flow: column nowrap;
   order: 3;
   justify-content: flex-start;
@@ -38,7 +38,7 @@
   height: 70%;
 }
 
-#top-left-box {
+#top_left_box {
   flex: 0 1 auto;
   flex-flow: row nowrap;
   order: 1;
@@ -48,7 +48,7 @@
   border-bottom-style: none;
 }
 
-#top-right-box {
+#top_right_box {
   flex: 0 1 auto;
   flex-flow: row-reverse nowrap;
   order: 2;

@@ -37,7 +37,7 @@ var getContainerByName = function(req, res) {
 	}, function(err){
 		console.log(err);
 	});
-}
+};
 
 var containerEntry = function(req, res) {
 	var box = req.body.box,
@@ -73,7 +73,7 @@ var containerUpdate = function(req, res) {
 		}
 	}).then(function(container){
 		if (!container) {
-			return res.send('Container not found!')
+			return res.send('Container not found!');
 		}
 		return container
 		.updateAttributes({
@@ -103,7 +103,7 @@ var containerDelete = function(req, res) {
 	})
 	.then(function(container) {
 		if (!container) {
-			return res.send('Container not found!')
+			return res.send('Container not found!');
 		}
 		return container
 			.destroy()

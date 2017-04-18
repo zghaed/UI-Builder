@@ -33,7 +33,7 @@ $(document).ready(function() {
         alert(data);
       }
     });//End of Ajax call
-  }//End of callback
+  }//End of getDataById
 
   $.ajax({
     type: 'GET',
@@ -117,25 +117,6 @@ $(document).ready(function() {
     return response.data.id;
   }
 
-  function callback(response) {
-    var id = response.id;
-    var newOrder = parseInt(childOrder) + 2;
-    var params = 'group=' + newOrder;
-    $.ajax({
-      type: 'POST',
-      url: 'http://localhost:8000/api/container/update/'+id,
-      data: params,
-      success: function(data) {
-        console.log('successfully update the order');
-        console.log(data);
-      },
-      error: function(data) {
-        alert('There was an error submitting the form');
-        alert(data);
-      }
-    });//End of Ajax call
-  }//End of callback
-
   $('.box').on('click', '#apply-button', function(){
     var theTemplateScript = $('#content').val();
     var data = $('#data').val();
@@ -192,6 +173,23 @@ $(document).ready(function() {
         var child = $(boxElement.children()[i]);
         if (parseInt(child.css('order')) > parseInt(addOrder)) {
           var childOrder = child.css('order');
+          function updateOrder(response) {
+            var id = response.id;
+            var newOrder = parseInt(childOrder) + 2;
+            var params = 'group=' + newOrder;
+            $.ajax({
+              type: 'POST',
+              url: 'http://localhost:8000/api/container/update/'+id,
+              data: params,
+              success: function(data) {
+
+              },
+              error: function(data) {
+                alert('There was an error submitting the form');
+                alert(data);
+              }
+            });//End of Ajax call
+          }//End of updateOrder
           if (child.hasClass('group')) {
             var params = 'box=' + boxName + '&group=' + childOrder;
             $.ajax({
@@ -199,7 +197,7 @@ $(document).ready(function() {
               url: 'http://localhost:8000/api/container',
               data: params,
               success: function(data) {
-                callback(data);
+                updateOrder(data);
               },
               error: function(data) {
                 alert('There was an error submitting the form');

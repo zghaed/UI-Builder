@@ -6,9 +6,13 @@ var Container = c.config.db.define( 'container', {
 		type: Sequelize.STRING,
 		field: 'box_name'
 	},
-	containerContent: {
+	containerTemplate: {
 		type: Sequelize.TEXT,
-		field: 'container_content'
+		field: 'container_template'
+	},
+	containerData: {
+		type: Sequelize.TEXT,
+		field: 'container_data'
 	},
 	isHorizontal: {
 		type: Sequelize.BOOLEAN,

@@ -57,8 +57,13 @@ $(document).ready(function() {
           var middleAddId = i + '_' + middleAddOrder + '_middle';
           var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + middleAddOrder
             + ';">Add</div>';
+          var theTemplateScript = boxes[i][j].containerTemplate;
+          var data = boxes[i][j].containerData;
+          var theTemplate = Handlebars.compile(theTemplateScript);
+          var jsonData = (data === "") ? "" : JSON.parse(data);
+          var theCompiledHTML = theTemplate(jsonData);
           var newContainers = '<div class="group" style="order:' + boxes[i][j].groupNumber + ';" id= "'+ boxes[i][j].groupNumber + '" data-placement="bottom">'
-          + boxes[i][j].containerContent + '</div>';
+          + theCompiledHTML + '</div>';
           if (j < boxes[i].length-1)
             newContainers += middleAddElement;
           var second = boxId + '>div:eq(0)';
@@ -130,8 +135,8 @@ $(document).ready(function() {
     });
 
   $('.box').on('click', '#apply-button', function(){
-    var theTemplateScript = $('textarea.content').val();
-    var data = $('textarea.data').val();
+    var theTemplateScript = $('#content').val();
+    var data = $('#data').val();
     var theTemplate = Handlebars.compile(theTemplateScript);
     var jsonData = (data === "") ? "" : JSON.parse(data);
     var theCompiledHTML = theTemplate(jsonData);

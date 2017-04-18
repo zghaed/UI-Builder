@@ -41,7 +41,8 @@ var getContainerByName = function(req, res) {
 
 var containerEntry = function(req, res) {
 	var box = req.body.box,
-		content = req.body.content,
+		template = req.body.template,
+		data = req.body.data,
 		horizontal = req.body.horizontal,
 		group = req.body.group;
 	m.models.container.sync()
@@ -49,7 +50,8 @@ var containerEntry = function(req, res) {
 			return 	m.models.container.create({
 				boxName: box,
 				groupNumber: group,
-				containerContent: content,
+				containerTemplate: template,
+				containerData: data,
 				isHorizontal: horizontal
 			});
 		})
@@ -63,7 +65,8 @@ var containerEntry = function(req, res) {
 
 var containerUpdate = function(req, res) {
 	var box = req.body.box,
-		content = req.body.content,
+		template = req.body.template,
+		data = req.body.data,
 		horizontal = req.body.horizontal,
 		group = req.body.group;
 	var id = req.params.id;
@@ -79,7 +82,8 @@ var containerUpdate = function(req, res) {
 		.updateAttributes({
 			boxName: box,
 			groupNumber: group,
-			containerContent: content,
+			containereTemplate: template,
+			containerData: data,
 			isHorizontal: horizontal
 		}).then(function(result){
 			console.log('successful');

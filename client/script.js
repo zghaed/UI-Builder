@@ -15,20 +15,25 @@ $(document).ready(function() {
     }
   };
 
-  var popOverUpdateSettings = {
-    html: true,
-    title : function() { return $(this).attr('id'); },
-    trigger: 'manual',
-    content: function (event) {
-      if (!event)
-        event = window.event;
-      event.cancelBubble = true;
-      if (event.stopPropagation)
-        event.stopPropagation();
-      event.preventDefault();
-      return $('.popup-content').html();
-    }
-  };
+  function fillContainers(data) {
+    $('#content').html(data.containerTemplate);
+    $('#data').html(data.containerData);
+  }
+
+  function getDataById(id) {
+    $.ajax({
+      type: 'GET',
+      url: 'http://localhost:8000/api/container/'+id,
+      dataType: 'json',
+      success: function(data) {
+        fillContainers(data);
+      },
+      error: function(data) {
+        alert('Cannot get the data.');
+        alert(data);
+      }
+    });//End of Ajax call
+  }//End of callback
 
   $.ajax({
     type: 'GET',
@@ -55,57 +60,39 @@ $(document).ready(function() {
           //Add containers to each box
           var middleAddOrder = parseInt(boxes[i][j].groupNumber) + 1;
           var middleAddId = i + '_' + middleAddOrder + '_middle';
-          var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + middleAddOrder
-            + ';">Add</div>';
+          var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:'
+           + middleAddOrder + ';">Add</div>';
           var theTemplateScript = boxes[i][j].containerTemplate;
-          var data = boxes[i][j].containerData;
+          var inputData = boxes[i][j].containerData;
           var theTemplate = Handlebars.compile(theTemplateScript);
-          var jsonData = (data === "") ? "" : JSON.parse(data);
+          var jsonData = (inputData === "") ? "" : JSON.parse(inputData);
           var theCompiledHTML = theTemplate(jsonData);
-          var newContainers = '<div class="group" style="order:' + boxes[i][j].groupNumber + ';" id= "'+ boxes[i][j].groupNumber + '" data-placement="bottom">'
-          + theCompiledHTML + '</div>';
+          var newContainers = '<div class="group" style="order:' + boxes[i][j].groupNumber + ';" id= "'+ boxes[i][j].id
+           + '" data-placement="bottom">' + theCompiledHTML + '</div>';
           if (j < boxes[i].length-1)
             newContainers += middleAddElement;
           var second = boxId + '>div:eq(0)';
           $(second).after(newContainers);
-          var $popover = $('#'+middleAddId).popover(popOverSettings)
-            .on('click',function(event) {
-              //Stop propagation
-              if (!event)
-                event = window.event;
-              event.cancelBubble = true;
-              if (event.stopPropagation)
-                event.stopPropagation();
-              event.preventDefault();
-              //Toggle popover by clicking on the items (4 main area)
+          $('#'+middleAddId).popover(popOverSettings)
+            .on('click',function() {
               $(this).popover('toggle');
               $('.group').not(this).popover('hide');
               $('.add-element').not(this).popover('hide');
             });
-          $('#'+boxes[i][j].groupNumber).popover(popOverUpdateSettings)
-            .on('click',function(event) {
-              console.log('adding');
-            //  $('#content').html('contenting');
-            //  $('#data').html('data');
-              //Stop propagation
-              if (!event)
-                event = window.event;
-              event.cancelBubble = true;
-              if (event.stopPropagation)
-                event.stopPropagation();
-              event.preventDefault();
-              //Toggle popover by clicking on the items (4 main area)
-             $(this).popover('toggle');
-             $('.group').not(this).popover('hide');
-             $('.add-element').not(this).popover('hide');
+          $('#'+boxes[i][j].id).popover(popOverSettings)
+            .on('click',function() {
+              $(this).popover('toggle');
+              getDataById($('.popover-title').html());
+              $('.group').not(this).popover('hide');
+              $('.add-element').not(this).popover('hide');
             });
+
           if (boxes[i][j].groupNumber <= minOrder)
             minOrder = boxes[i][j].groupNumber - 1;
           if (boxes[i][j].groupNumber >= maxOrder)
             maxOrder = boxes[i][j].groupNumber + 1;
         }
         $(boxId).children(':first').css('order',  minOrder);
-
         if (boxes[i].length > 0) {
           $(boxId).children(':last').css('order',  maxOrder);
         } else {
@@ -120,19 +107,34 @@ $(document).ready(function() {
   });
 
   $('.add-element').popover(popOverSettings)
-    .on('click',function(event) {
-      //Stop propagation
-      if (!event)
-        event = window.event;
-      event.cancelBubble = true;
-      if (event.stopPropagation)
-        event.stopPropagation();
-      event.preventDefault();
-      //Toggle popover by clicking on the items (4 main area)
+    .on('click',function() {
       $(this).popover('toggle');
       $('.group').not(this).popover('hide');
       $('.add-element').not(this).popover('hide');
     });
+
+  function getId(response) {
+    return response.data.id;
+  }
+
+  function callback(response) {
+    var id = response.id;
+    var newOrder = parseInt(childOrder) + 2;
+    var params = 'group=' + newOrder;
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:8000/api/container/update/'+id,
+      data: params,
+      success: function(data) {
+        console.log('successfully update the order');
+        console.log(data);
+      },
+      error: function(data) {
+        alert('There was an error submitting the form');
+        alert(data);
+      }
+    });//End of Ajax call
+  }//End of callback
 
   $('.box').on('click', '#apply-button', function(){
     var theTemplateScript = $('#content').val();
@@ -143,6 +145,7 @@ $(document).ready(function() {
     var addId = $('.popover-title').html();
     var addIdArray = addId.split('_');
     var location = addIdArray.pop();
+
     //For middle box add elements
     if (location === 'middle') {
       addIdArray.pop();
@@ -164,60 +167,33 @@ $(document).ready(function() {
         $(endAdd).show();
       } else {
         //None empty box
-        groupNumber = addOrder - parseInt(1);
+        groupNumber = parseInt(addOrder) - 1;
         $('#'+addId).css('order', parseInt(addOrder) - 2);
         var middleAddId = boxName + '_' + addOrder + '_middle';
-        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + addOrder + ';">Add</div>';
+        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:'
+         + addOrder + ';">Add</div>';
 
         $('#'+addId).after(middleAddElement);
         $('#'+middleAddId).popover(popOverSettings)
-          .on('click',function(event) {
-            //Stop propagation
-            if (!event)
-              event = window.event;
-            event.cancelBubble = true;
-            if (event.stopPropagation)
-              event.stopPropagation();
-            event.preventDefault();
-            //Toggle popover by clicking on the items (4 main area)
+          .on('click',function() {
             $(this).popover('toggle');
             $('.group').not(this).popover('hide');
             $('.add-element').not(this).popover('hide');
           });
       }
     } else if (location === 'middle') {
-      console.log('location is middle');
-      console.log(boxName);
       groupNumber = parseInt(addOrder) + 1;
       $('#'+addId).css('order', addOrder);
       var middleAddOrder = parseInt(addOrder) + 2;
       var middleAddId = boxName + '_' + middleAddOrder + '_middle';
-      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + middleAddOrder + ';">Add</div>';
+      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:'
+       + middleAddOrder + ';">Add</div>';
       for (var i=0; i<boxElement.children().length; i++) {
         var child = $(boxElement.children()[i]);
         if (parseInt(child.css('order')) > parseInt(addOrder)) {
           var childOrder = child.css('order');
-          function callback(response) {
-            var id = response.id;
-            var newOrder = parseInt(childOrder) + 2;
-            var params = 'group=' + newOrder;
-            $.ajax({
-              type: 'POST',
-              url: 'http://localhost:8000/api/container/update/'+id,
-              data: params,
-              success: function(data) {
-                console.log('successfully update the order');
-                console.log(data);
-              },
-              error: function(data) {
-                alert('There was an error submitting the form');
-                alert(data);
-              }
-            });//End of Ajax call
-          }//End of callback
           if (child.hasClass('group')) {
             var params = 'box=' + boxName + '&group=' + childOrder;
-            var return_first;
             $.ajax({
               type: 'POST',
               url: 'http://localhost:8000/api/container',
@@ -230,22 +206,13 @@ $(document).ready(function() {
                 alert(data);
               }
             });//End of Ajax call
-
           }//end of if for groups
           child.css('order', parseInt(childOrder) + 2);
         }//End of if for orders
       }//End of for
       $('#'+addId).after(middleAddElement);
       $('#'+middleAddId).popover(popOverSettings)
-        .on('click',function(event) {
-          //Stop propagation
-          if (!event)
-            event = window.event;
-          event.cancelBubble = true;
-          if (event.stopPropagation)
-            event.stopPropagation();
-          event.preventDefault();
-          //Toggle popover by clicking on the items (4 main area)
+        .on('click',function() {
           $(this).popover('toggle');
           $('.group').not(this).popover('hide');
           $('.add-element').not(this).popover('hide');
@@ -254,34 +221,29 @@ $(document).ready(function() {
       groupNumber = parseInt(addOrder) + 1;
       $('#'+addId).css('order', parseInt(addOrder) + 2);
       var middleAddId = boxName + '_'+ addOrder + '_middle';
-      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' + addOrder + ';">Add</div>';
+      var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:'
+       + addOrder + ';">Add</div>';
 
       $('#'+addId).after(middleAddElement);
       $('#'+middleAddId).popover(popOverSettings)
-        .on('click',function(event) {
-          //Stop propagation
-          if (!event)
-            event = window.event;
-          event.cancelBubble = true;
-          if (event.stopPropagation)
-            event.stopPropagation();
-          event.preventDefault();
-          //Toggle popover by clicking on the items (4 main area)
+        .on('click',function() {
           $(this).popover('toggle');
           $('.group').not(this).popover('hide');
           $('.add-element').not(this).popover('hide');
         });
     }
 
-    var params = 'content=' + theCompiledHTML + '&box=' + boxName + '&horizontal=' + horizontal + '&group=' + groupNumber;
+    var params = 'template=' + theTemplateScript + '&data=' + data + '&box=' + boxName + '&horizontal=' + horizontal
+     + '&group=' + groupNumber;
 
     $.ajax({
       type: 'POST',
       url: 'http://localhost:8000/api/container/add',
       data: params,
       success: function(data) {
-        var newDivString = '<div class="group" style="order:' + groupNumber + ';">' + theCompiledHTML + '</div>';
-
+        var id = getId(data);
+        var newDivString = '<div class="group" id="' + id + '" style="order:' + groupNumber + ';" data-placement="bottom" >'
+         + theCompiledHTML + '</div>';
         if (location === 'start') {
           $('#'+addId).after(newDivString);
         } else if (location === 'middle') {
@@ -289,6 +251,14 @@ $(document).ready(function() {
         } else {
           $(newDivString).insertBefore('#'+addId);
         }
+
+        $('#'+id).popover(popOverSettings)
+          .on('click',function() {
+            $(this).popover('toggle');
+            getDataById($('.popover-title').html());
+            $('.group').not(this).popover('hide');
+            $('.add-element').not(this).popover('hide');
+          });
         $('.add-element').popover('hide');
       },
       error: function(data) {

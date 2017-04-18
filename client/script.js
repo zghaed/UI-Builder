@@ -63,7 +63,7 @@ $(document).ready(function() {
             newContainers += middleAddElement;
           var second = boxId + '>div:eq(0)';
           $(second).after(newContainers);
-          $('#'+middleAddId).popover(popOverSettings)
+          var $popover = $('#'+middleAddId).popover(popOverSettings)
             .on('click',function(event) {
               //Stop propagation
               if (!event)
@@ -74,13 +74,14 @@ $(document).ready(function() {
               event.preventDefault();
               //Toggle popover by clicking on the items (4 main area)
               $(this).popover('toggle');
+              $('.group').not(this).popover('hide');
               $('.add-element').not(this).popover('hide');
             });
           $('#'+boxes[i][j].groupNumber).popover(popOverUpdateSettings)
             .on('click',function(event) {
-
-              $('#content').html('content i here');
-              $('#data').html('hello');
+              console.log('adding');
+            //  $('#content').html('contenting');
+            //  $('#data').html('data');
               //Stop propagation
               if (!event)
                 event = window.event;
@@ -116,7 +117,6 @@ $(document).ready(function() {
   $('.add-element').popover(popOverSettings)
     .on('click',function(event) {
       //Stop propagation
-      console.log('heeeree');
       if (!event)
         event = window.event;
       event.cancelBubble = true;
@@ -125,25 +125,23 @@ $(document).ready(function() {
       event.preventDefault();
       //Toggle popover by clicking on the items (4 main area)
       $(this).popover('toggle');
+      $('.group').not(this).popover('hide');
       $('.add-element').not(this).popover('hide');
     });
 
   $('.box').on('click', '#apply-button', function(){
-    var theTemplateScript = $('textarea#content').val();
-    var data = $('textarea#data').val();
+    var theTemplateScript = $('textarea.content').val();
+    var data = $('textarea.data').val();
     var theTemplate = Handlebars.compile(theTemplateScript);
     var jsonData = (data === "") ? "" : JSON.parse(data);
     var theCompiledHTML = theTemplate(jsonData);
     var addId = $('.popover-title').html();
     var addIdArray = addId.split('_');
     var location = addIdArray.pop();
-    console.log(addIdArray);
     //For middle box add elements
     if (location === 'middle') {
       addIdArray.pop();
     }
-    console.log('add id array is');
-    console.log(addIdArray);
     var boxName = addIdArray.join('_');
     var boxElement = $('#'+boxName);
     var horizontal = 1;
@@ -178,6 +176,7 @@ $(document).ready(function() {
             event.preventDefault();
             //Toggle popover by clicking on the items (4 main area)
             $(this).popover('toggle');
+            $('.group').not(this).popover('hide');
             $('.add-element').not(this).popover('hide');
           });
       }
@@ -243,6 +242,7 @@ $(document).ready(function() {
           event.preventDefault();
           //Toggle popover by clicking on the items (4 main area)
           $(this).popover('toggle');
+          $('.group').not(this).popover('hide');
           $('.add-element').not(this).popover('hide');
         });
     } else {
@@ -263,6 +263,7 @@ $(document).ready(function() {
           event.preventDefault();
           //Toggle popover by clicking on the items (4 main area)
           $(this).popover('toggle');
+          $('.group').not(this).popover('hide');
           $('.add-element').not(this).popover('hide');
         });
     }
@@ -291,4 +292,11 @@ $(document).ready(function() {
       }
     });//End of Ajax call
   });//End of apply button
+
+  $('.box').on('click', '#cancel', function(){
+    $('#content').html('');
+    $('#data').html('');
+    $('.group').popover('hide');
+    $('.add-element').popover('hide');
+  });
 });

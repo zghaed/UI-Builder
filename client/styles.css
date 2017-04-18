@@ -85,8 +85,12 @@
   border: none;
 }
 
-#content,
+#content {
+  width: 600px;
+  min-height: 200px;
+}
+
 #data {
   width: 600px;
-  height: 200px;
+  min-height: 200px;
 }

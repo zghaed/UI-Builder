@@ -60,15 +60,21 @@ $(document).ready(function() {
           //Add containers to each box
           var middleAddOrder = parseInt(boxes[i][j].groupNumber) + 1;
           var middleAddId = i + '_' + middleAddOrder + '_middle';
-          var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:'
-           + middleAddOrder + ';">Add</div>';
+          var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
+           middleAddOrder + ';">Add</div>';
           var theTemplateScript = boxes[i][j].containerTemplate;
           var inputData = boxes[i][j].containerData;
-          var theTemplate = Handlebars.compile(theTemplateScript);
           var jsonData = (inputData === "") ? "" : JSON.parse(inputData);
+          var preCompiledTemplateScript;
+          if (Array.isArray(jsonData)) {
+            preCompiledTemplateScript = '{{#each .}}' + theTemplateScript + '{{/each}}';
+          } else {
+            preCompiledTemplateScript = theTemplateScript;
+          }
+          var theTemplate = Handlebars.compile(preCompiledTemplateScript);
           var theCompiledHTML = theTemplate(jsonData);
-          var newContainers = '<div class="group" style="order:' + boxes[i][j].groupNumber + ';" id= "'+ boxes[i][j].id
-           + '" data-placement="bottom">' + theCompiledHTML + '</div>';
+          var newContainers = '<div class="group" style="order:' + boxes[i][j].groupNumber + ';" id= "'+ boxes[i][j].id +
+           '" data-placement="bottom">' + theCompiledHTML + '</div>';
           if (j < boxes[i].length-1)
             newContainers += middleAddElement;
           var second = boxId + '>div:eq(0)';
@@ -120,8 +126,14 @@ $(document).ready(function() {
   $('.box').on('click', '#apply-button', function(){
     var theTemplateScript = $('#content').val();
     var inputData = $('#data').val();
-    var theTemplate = Handlebars.compile(theTemplateScript);
     var jsonData = (inputData === "") ? "" : JSON.parse(inputData);
+    var preCompiledTemplateScript;
+    if (Array.isArray(jsonData)) {
+      preCompiledTemplateScript = '{{#each .}}' + theTemplateScript + '{{/each}}';
+    } else {
+      preCompiledTemplateScript = theTemplateScript;
+    }
+    var theTemplate = Handlebars.compile(preCompiledTemplateScript);
     var theCompiledHTML = theTemplate(jsonData);
     var addId = $('.popover-title').html();
     var addIdArray = addId.split('_');
@@ -152,8 +164,8 @@ $(document).ready(function() {
           groupNumber = parseInt(addOrder) - 1;
           $('#'+addId).css('order', parseInt(addOrder) - 2);
           var middleAddId = boxName + '_' + addOrder + '_middle';
-          var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:'
-           + addOrder + ';">Add</div>';
+          var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
+           addOrder + ';">Add</div>';
 
           $('#'+addId).after(middleAddElement);
           $('#'+middleAddId).popover(popOverSettings)
@@ -168,8 +180,8 @@ $(document).ready(function() {
         $('#'+addId).css('order', addOrder);
         var middleAddOrder = parseInt(addOrder) + 2;
         var middleAddId = boxName + '_' + middleAddOrder + '_middle';
-        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:'
-         + middleAddOrder + ';">Add</div>';
+        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
+         middleAddOrder + ';">Add</div>';
         for (var i=0; i<boxElement.children().length; i++) {
           var child = $(boxElement.children()[i]);
           if (parseInt(child.css('order')) > parseInt(addOrder)) {
@@ -210,8 +222,8 @@ $(document).ready(function() {
         groupNumber = parseInt(addOrder) + 1;
         $('#'+addId).css('order', parseInt(addOrder) + 2);
         var middleAddId = boxName + '_'+ addOrder + '_middle';
-        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:'
-         + addOrder + ';">Add</div>';
+        var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
+         addOrder + ';">Add</div>';
 
         $('#'+addId).after(middleAddElement);
         $('#'+middleAddId).popover(popOverSettings)
@@ -222,17 +234,17 @@ $(document).ready(function() {
           });
       }
 
-      var params = 'template=' + theTemplateScript + '&data=' + inputData + '&box=' + boxName + '&horizontal=' + horizontal
-       + '&group=' + groupNumber;
+      var addParams = 'template=' + theTemplateScript + '&data=' + inputData + '&box=' + boxName + '&horizontal=' + horizontal +
+       '&group=' + groupNumber;
 
       $.ajax({
         type: 'POST',
         url: 'http://localhost:8000/api/container/add',
-        data: params,
+        data: addParams,
         success: function(data) {
           var id = getId(data);
-          var newDivString = '<div class="group" id="' + id + '" style="order:' + groupNumber + ';" data-placement="bottom" >'
-           + theCompiledHTML + '</div>';
+          var newDivString = '<div class="group" id="' + id + '" style="order:' + groupNumber + ';" data-placement="bottom" >' +
+           theCompiledHTML + '</div>';
           if (location === 'start') {
             $('#'+addId).after(newDivString);
           } else if (location === 'middle') {
@@ -254,19 +266,26 @@ $(document).ready(function() {
           alert('There was an error submitting the form');
           alert(data);
         }
-      });//End of Ajax call
+      });//End of Ajax call for adding element to the database
     } else {
-      var params = 'template=' + theTemplateScript + '&data=' + inputData;
+      var updateParams = 'template=' + theTemplateScript + '&data=' + inputData;
       var id = $('.popover-title').html();
       $.ajax({
         type: 'POST',
         url: 'http://localhost:8000/api/container/update/'+id,
-        data: params,
+        data: updateParams,
         success: function(data) {
           var theTemplateScript = data.containerTemplate;
           var inputData = data.containerData;
-          var theTemplate = Handlebars.compile(theTemplateScript);
+          //TODO: error handling for JSON.parse
           var jsonData = (inputData === "") ? "" : JSON.parse(inputData);
+          var preCompiledTemplateScript;
+          if (Array.isArray(jsonData)) {
+            preCompiledTemplateScript = '{{#each .}}' + theTemplateScript + '{{/each}}';
+          } else {
+            preCompiledTemplateScript = theTemplateScript;
+          }
+          var theTemplate = Handlebars.compile(preCompiledTemplateScript);
           var theCompiledHTML = theTemplate(jsonData);
           $('#'+$('.popover-title').html()).html(theCompiledHTML);
           $('.group').popover('hide');

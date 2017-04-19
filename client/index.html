@@ -17,34 +17,101 @@
 <body>
   <div class="wrapper">
     <div class="box" id="top_left_box">
+      <div class="form-group">
+        <label class="custom-control custom-radio">
+          <input name="top_left_box_direction" type="radio" class="custom-control-input" value="0">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-vertical stop-bubble" aria-hidden="true"></span>
+          </span>
+        </label>
+        <label class="custom-control custom-radio">
+          <input name="top_left_box_direction" type="radio" class="custom-control-input" value="1">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>
+          </span>
+        </label>
+      </div>
       <div class="add-element" id="top_left_box_start" data-placement="bottom" style="order: 0;">Add</div>
       <div class="add-element" id="top_left_box_end" data-placement="bottom" style="order: 0;">Add</div>
     </div>
 
     <div class="box" id="top_right_box">
+      <div class="form-group">
+        <label class="custom-control custom-radio">
+          <input name="top_right_box_direction" type="radio" class="custom-control-input" value="0">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-vertical stop-bubble" aria-hidden="true"></span>
+          </span>
+        </label>
+        <label class="custom-control custom-radio">
+          <input name="top_right_box_direction" type="radio" class="custom-control-input" value="1">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>
+          </span>
+        </label>
+      </div>
       <div class="add-element" id="top_right_box_start" data-placement="bottom" style="order: 0;">Add</div>
       <div class="add-element" id="top_right_box_end" data-placement="bottom" style="order: 0;">Add</div>
     </div>
 
     <div class="box" id="middle_box">
+      <div class="form-group">
+        <label class="custom-control custom-radio">
+          <input name="middle_box_direction" type="radio" class="custom-control-input" value="0">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-vertical stop-bubble" aria-hidden="true"></span>
+          </span>
+        </label>
+        <label class="custom-control custom-radio">
+          <input name="middle_box_direction" type="radio" class="custom-control-input" value="1">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>
+          </span>
+        </label>
+      </div>
       <div class="add-element" id="middle_box_start" data-placement="bottom" style="order: 0;">Add</div>
       <div class="add-element" id="middle_box_end" data-placement="bottom" style="order: 0;">Add</div>
     </div>
 
     <div class="box" id="bottom_right_box">
+      <div class="form-group">
+        <label class="custom-control custom-radio">
+          <input name="bottom_right_box_direction" type="radio" class="custom-control-input" value="0">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-vertical stop-bubble" aria-hidden="true"></span>
+          </span>
+        </label>
+        <label class="custom-control custom-radio">
+          <input name="bottom_right_box_direction" type="radio" class="custom-control-input" value="1">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+            <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>
+          </span>
+        </label>
+      </div>
       <div class="add-element" id="bottom_right_box_start" data-placement="top" style="order: 0;">Add</div>
       <div class="add-element" id="bottom_right_box_end" data-placement="top" style="order: 0;">Add</div>
     </div>
 
     <div class="popup-content hide">
-      <label class="form-group">Add/Edit components:</label>
+      <div class="form-group">
+        <label class="popover-label">Add/Edit components:</label>
+        <button type="button" id="delete" class="btn btn-danger popover-delete hide">Delete</button>
+      </div>
       <!-- HTML Textarea -->
       <div class="form-group">
-        <textarea id="content" class="form-control" type="text/x-handlebars-template" placeholder="HMTL"></textarea>
+        <textarea id="content" class="popover-content form-control" type="text/x-handlebars-template" placeholder="HMTL"></textarea>
       </div>
       <!-- Data Input -->
       <div class="form-group">
-        <textarea id="data" class="form-control" placeholder="Data"></textarea>
+        <textarea id="data" class="popover-data form-control" placeholder="Data"></textarea>
       </div>
       <div class="form-group">
         <button type="button" id="apply-button" class="btn btn-primary">Apply</button>

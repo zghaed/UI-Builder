@@ -18,6 +18,7 @@ $(document).ready(function() {
   function fillContainers(data) {
     $('#content').html(data.containerTemplate);
     $('#data').html(data.containerData);
+    $('#delete').removeClass('hide');
   }
 
   function getDataById(id) {
@@ -29,6 +30,7 @@ $(document).ready(function() {
         fillContainers(data);
       },
       error: function(data) {
+        console.log(id);
         alert('Cannot get the data.');
         alert(data);
       }
@@ -52,7 +54,6 @@ $(document).ready(function() {
         var boxId = '#' + i ;
         var minOrder = 0;
         var maxOrder = 0;
-
         boxes[i].sort(function (a, b) {
           return a.groupNumber - b.groupNumber;
         });
@@ -77,7 +78,7 @@ $(document).ready(function() {
            '" data-placement="bottom">' + theCompiledHTML + '</div>';
           if (j < boxes[i].length-1)
             newContainers += middleAddElement;
-          var second = boxId + '>div:eq(0)';
+          var second = boxId + '>div:eq(1)';
           $(second).after(newContainers);
           $('#'+middleAddId).popover(popOverSettings)
             .on('click',function() {
@@ -98,7 +99,8 @@ $(document).ready(function() {
           if (boxes[i][j].groupNumber >= maxOrder)
             maxOrder = boxes[i][j].groupNumber + 1;
         }
-        $(boxId).children(':first').css('order',  minOrder);
+        $(boxId).children(':first').css('order',  parseInt(minOrder)-1);
+        $(boxId).children().eq(1).css('order',  minOrder);
         if (boxes[i].length > 0) {
           $(boxId).children(':last').css('order',  maxOrder);
         } else {
@@ -137,9 +139,8 @@ $(document).ready(function() {
     var theCompiledHTML = theTemplate(jsonData);
     var addId = $('.popover-title').html();
     var addIdArray = addId.split('_');
-    if (addIdArray.length > 1) {
+    if (addIdArray.length > 1) {//Ading a group
       var location = addIdArray.pop();
-
       //For middle box add elements
       if (location === 'middle') {
         addIdArray.pop();
@@ -157,6 +158,7 @@ $(document).ready(function() {
           $('#'+addId).css('order', parseInt(addOrder) - 1);
           var endAdd = '#' + boxName + '_end';
           $(endAdd).css('order', parseInt(addOrder) + 1);
+          $('#'+boxName).children(':first').css('order',  parseInt(addOrder) - 2);
           //TODO: Maybe I shouldn't show before successful
           $(endAdd).show();
         } else {
@@ -166,8 +168,8 @@ $(document).ready(function() {
           var middleAddId = boxName + '_' + addOrder + '_middle';
           var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
            addOrder + ';">Add</div>';
-
           $('#'+addId).after(middleAddElement);
+          $('#'+boxName).children(':first').css('order',  parseInt(addOrder) - 3);
           $('#'+middleAddId).popover(popOverSettings)
             .on('click',function() {
               $(this).popover('toggle');
@@ -195,8 +197,12 @@ $(document).ready(function() {
                   type: 'POST',
                   url: 'http://localhost:8000/api/container/update/'+id,
                   data: params,
-                  success: console.log('success'),
-                  error: alert('There was an error submitting the form')
+                  success: function(data) {
+                    console.log('successfully update the order');
+                  },
+                  error: function(data) {
+                    alert('Error in updating the order');
+                  }
                 });//End of Ajax call
               }//End of updateOrder
               var params = 'box=' + boxName + '&group=' + child.css('order');
@@ -205,7 +211,9 @@ $(document).ready(function() {
                 url: 'http://localhost:8000/api/container',
                 data: params,
                 success: updateOrder,
-                error: alert('There was an error submitting the form')
+                error: function(data) {
+                  alert('Error in getting the container');
+                }
               });//End of Ajax call
             }//end of if for groups
             child.css('order', parseInt(child.css('order')) + 2);
@@ -263,11 +271,11 @@ $(document).ready(function() {
           $('.add-element').popover('hide');
         },
         error: function(data) {
-          alert('There was an error submitting the form');
+          alert('There was an error in adding a container');
           alert(data);
         }
       });//End of Ajax call for adding element to the database
-    } else {
+    } else {//Editing a group
       var updateParams = 'template=' + theTemplateScript + '&data=' + inputData;
       var id = $('.popover-title').html();
       $.ajax({

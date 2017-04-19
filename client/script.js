@@ -184,10 +184,7 @@ $(document).ready(function() {
                   url: 'http://localhost:8000/api/container/update/'+id,
                   data: params,
                   success: console.log('success'),
-                  error: function(data) {
-                    alert('There was an error submitting the form');
-                    alert(data);
-                  }
+                  error: alert('There was an error submitting the form')
                 });//End of Ajax call
               }//End of updateOrder
               var params = 'box=' + boxName + '&group=' + child.css('order');
@@ -196,10 +193,7 @@ $(document).ready(function() {
                 url: 'http://localhost:8000/api/container',
                 data: params,
                 success: updateOrder,
-                error: function(data) {
-                  alert('There was an error submitting the form');
-                  alert(data);
-                }
+                error: alert('There was an error submitting the form')
               });//End of Ajax call
             }//end of if for groups
             child.css('order', parseInt(child.css('order')) + 2);
@@ -269,7 +263,13 @@ $(document).ready(function() {
         url: 'http://localhost:8000/api/container/update/'+id,
         data: params,
         success: function(data) {
-          console.log('successfully edited the database hooray!');
+          var theTemplateScript = data.containerTemplate;
+          var inputData = data.containerData;
+          var theTemplate = Handlebars.compile(theTemplateScript);
+          var jsonData = (inputData === "") ? "" : JSON.parse(inputData);
+          var theCompiledHTML = theTemplate(jsonData);
+          $('#'+$('.popover-title').html()).html(theCompiledHTML);
+          $('.group').popover('hide');
         },
         error: function(data) {
           alert('There was an error updating the container!');

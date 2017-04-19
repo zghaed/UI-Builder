@@ -306,6 +306,19 @@ $(document).ready(function() {
     }
   });//End of apply button
 
+  $('.custom-radio').on('click', function(event) {
+    var boxId = event.target.parentNode.parentNode.parentNode.id;
+    var checkedValue;
+    if (event.target.checked) {
+      checkedValue = event.target.value;
+    }
+    if (checkedValue == 1) {
+      $('#'+boxId).css('flex-direction', 'row');
+    } else if (checkedValue == 0) {
+      $('#'+boxId).css('flex-direction', 'column');
+    }
+  });
+
   $('.box').on('click', '#cancel', function(){
     $('#content').html('');
     $('#data').html('');

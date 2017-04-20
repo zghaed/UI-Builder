@@ -327,6 +327,19 @@ $(document).ready(function() {
     } else if (checkedValue === "false") {
       $('#'+boxId).css('flex-direction', 'column');
     }
+    var updateParams = 'horizontal=' + checkedValue;
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:8000/api/container/updatebox/'+boxId,
+      data: updateParams,
+      success: function(data) {
+        console.log('successfully update the server');
+      },
+      error: function(data) {
+        alert('There was an error updating the container!');
+        alert(data);
+      }
+    });//End of Ajax call
   });
 
   $('.box').on('click', '#delete', function(event) {

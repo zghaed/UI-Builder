@@ -98,6 +98,37 @@ var containerUpdate = function(req, res) {
 	});
 };
 
+var boxUpdate = function(req, res) {
+	var box = req.body.box,
+		template = req.body.template,
+		data = req.body.data,
+		horizontal = req.body.horizontal,
+		group = req.body.group;
+	var name = req.params.name;
+	return m.models.container.findAll({
+		where: {
+			boxName: name
+		}
+	}).then(function(container){
+		if (!container) {
+			return res.send('No box found!');
+		}
+		for (var i in container) {
+			container[i].updateAttributes({
+				boxName: box,
+				groupNumber: group,
+				containerTemplate: template,
+				containerData: data,
+				isHorizontal: horizontal
+			});
+		}
+	}).then(function(result){
+		res.send(result);
+	}, function(err){
+		console.log(err);
+	});
+};
+
 var containerDelete = function(req, res) {
 	var id = req.params.id;
 	m.models.container.findOne({
@@ -125,5 +156,6 @@ exports.routes = {
 	containerEntry: containerEntry,
 	containerDelete: containerDelete,
 	containerUpdate: containerUpdate,
+	boxUpdate: boxUpdate,
 	getContainerByName: getContainerByName
 };

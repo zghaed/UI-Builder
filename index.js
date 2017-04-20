@@ -21,10 +21,10 @@ app.get('/api/container/:id', r.routes.getContainerById);
 
 app.post('/api/container', r.routes.getContainerByName);
 app.post('/api/container/add', r.routes.containerEntry);
+app.post('/api/container/update/:id', r.routes.containerUpdate);
+app.post('/api/container/updatebox/:name', r.routes.boxUpdate);
 
 app.delete('/api/container/delete/:id', r.routes.containerDelete);
-
-app.post('/api/container/update/:id', r.routes.containerUpdate);
 
 app.listen(8000, function() {
 	console.log('server is running');

@@ -74,7 +74,7 @@
 
 .popover-title {
   border: none;
-  display: none;
+  /*display: none;*/
 }
 
 .popover-content {

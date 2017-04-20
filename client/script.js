@@ -26,16 +26,12 @@ $(document).ready(function() {
       type: 'GET',
       url: 'http://localhost:8000/api/container/'+id,
       dataType: 'json',
-      success: function(data) {
-        fillContainers(data);
-      },
+      success: fillContainers,
       error: function(data) {
-        console.log(id);
         alert('Cannot get the data.');
-        alert(data);
       }
     });//End of Ajax call
-  }//End of getDataById
+  }
 
   $.ajax({
     type: 'GET',
@@ -87,11 +83,13 @@ $(document).ready(function() {
               $('.add-element').not(this).popover('hide');
             });
           $('#'+boxes[i][j].id).popover(popOverSettings)
-            .on('click',function() {
+            .on('click',function(event) {
+                // debugger;
               $(this).popover('toggle');
-              getDataById($('.popover-title').html());
               $('.group').not(this).popover('hide');
               $('.add-element').not(this).popover('hide');
+              console.log(event.currentTarget.id);
+              getDataById(event.currentTarget.id);
             });
 
           if (boxes[i][j].groupNumber <= minOrder)
@@ -198,7 +196,7 @@ $(document).ready(function() {
                   url: 'http://localhost:8000/api/container/update/'+id,
                   data: params,
                   success: function(data) {
-                    console.log('successfully update the order');
+                    //console.log('successfully update the order');
                   },
                   error: function(data) {
                     alert('Error in updating the order');
@@ -215,7 +213,21 @@ $(document).ready(function() {
                   alert('Error in getting the container');
                 }
               });//End of Ajax call
-            }//end of if for groups
+              //end of if for groups
+            } else {
+              var oldId = child.attr('id');
+              var oldIdArray = oldId.split('_');
+              var middleLocation = oldIdArray.pop();
+              var newId;
+              if (middleLocation === 'middle') {
+                oldIdArray.pop();
+                var prefixId = oldIdArray.join('_');
+                newId = prefixId + '_' + (parseInt(child.css('order')) + 2) + '_middle';
+              } else {
+                newId = oldId;
+              }
+              child.attr('id', newId);
+            }
             child.css('order', parseInt(child.css('order')) + 2);
           }//End of if for orders
         }//End of for
@@ -232,7 +244,6 @@ $(document).ready(function() {
         var middleAddId = boxName + '_'+ addOrder + '_middle';
         var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
          addOrder + ';">Add</div>';
-
         $('#'+addId).after(middleAddElement);
         $('#'+middleAddId).popover(popOverSettings)
           .on('click',function() {
@@ -260,13 +271,12 @@ $(document).ready(function() {
           } else {
             $(newDivString).insertBefore('#'+addId);
           }
-
           $('#'+id).popover(popOverSettings)
             .on('click',function() {
               $(this).popover('toggle');
-              getDataById($('.popover-title').html());
               $('.group').not(this).popover('hide');
               $('.add-element').not(this).popover('hide');
+              getDataById(event.currentTarget.id);
             });
           $('.add-element').popover('hide');
         },
@@ -312,14 +322,21 @@ $(document).ready(function() {
     if (event.target.checked) {
       checkedValue = event.target.value;
     }
-    if (checkedValue == 1) {
+    if (checkedValue === "true") {
       $('#'+boxId).css('flex-direction', 'row');
-    } else if (checkedValue == 0) {
+    } else if (checkedValue === "false") {
       $('#'+boxId).css('flex-direction', 'column');
     }
   });
 
-  $('.box').on('click', '#cancel', function(){
+  $('.box').on('click', '#delete', function(event) {
+    console.log('delete is clicking');
+    console.log(event.target.parentNode.parentNode);
+    $('.group').popover('hide');
+    $('.add-element').popover('hide');
+  });
+
+  $('.box').on('click', '#cancel', function() {
     $('#content').html('');
     $('#data').html('');
     $('.group').popover('hide');

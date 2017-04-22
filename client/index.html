@@ -16,8 +16,8 @@
 
 <body>
   <div class="wrapper">
-    <div class="box" id="top_left_box">
-      <div class="form-group">
+    <div class="box display-borders" id="top_left_box">
+      <div class="direction form-group">
         <label class="custom-control custom-radio">
           <input name="top_left_box_direction" type="radio" class="custom-control-input" value="false">
           <span class="custom-control-indicator"></span>
@@ -37,8 +37,8 @@
       <div class="add-element" id="top_left_box_end" data-placement="bottom">Add</div>
     </div>
 
-    <div class="box" id="top_right_box">
-      <div class="form-group">
+    <div class="box display-borders" id="top_right_box">
+      <div class="direction form-group">
         <label class="custom-control custom-radio">
           <input name="top_right_box_direction" type="radio" class="custom-control-input" value="false">
           <span class="custom-control-indicator"></span>
@@ -58,8 +58,8 @@
       <div class="add-element" id="top_right_box_end" data-placement="bottom">Add</div>
     </div>
 
-    <div class="box" id="middle_box">
-      <div class="form-group">
+    <div class="box display-borders" id="middle_box">
+      <div class="direction form-group">
         <label class="custom-control custom-radio">
           <input name="middle_box_direction" type="radio" class="custom-control-input" checked="checked" value="false">
           <span class="custom-control-indicator"></span>
@@ -79,8 +79,8 @@
       <div class="add-element" id="middle_box_end" data-placement="bottom">Add</div>
     </div>
 
-    <div class="box" id="bottom_right_box">
-      <div class="form-group">
+    <div class="box display-borders" id="bottom_right_box">
+      <div class="direction form-group">
         <label class="custom-control custom-radio">
           <input name="bottom_right_box_direction" type="radio" class="custom-control-input" value="false">
           <span class="custom-control-indicator"></span>
@@ -118,5 +118,15 @@
         <button type="button" id="cancel" class="btn btn-default">Cancel</button>
       </div>
     </div> <!-- End of popover div -->
+
+    <div class="btn-group btn-toggle" data-toggle="buttons">
+      <label class="btn btn-primary active">
+        <input type="radio" name="options" value="source">Edit Mode
+      </label>
+      <label class="btn btn-default">
+        <input type="radio" name="options" value="preview" checked="">Preview
+      </label>
+    </div>
   </div> <!-- End of wrapper div -->
+
 </body>

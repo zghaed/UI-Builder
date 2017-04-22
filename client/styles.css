@@ -12,10 +12,13 @@
 }
 
 .box {
+  display: flex;
+}
+
+.display-borders {
   border-width: 2px;
   border-color: lightgrey;
   border-style: dashed;
-  display: flex;
 }
 
 #bottom_right_box {
@@ -59,11 +62,13 @@
   right: 1em;*/
 }
 
+#preview {
+  order: 5;
+}
+
 .add-element {
   padding: 0.5em;
   border-style: dotted;
-  /*margin-left: 0.5em;
-  margin-right: 0.5em;*/
   border-width: 2px;
   border-color: lightgrey;
 }

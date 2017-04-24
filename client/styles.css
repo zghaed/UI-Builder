@@ -73,6 +73,11 @@
   border-color: lightgrey;
 }
 
+.group:hover {
+  background-color: lightgrey;
+  cursor: pointer;
+}
+
 .popover {
   max-width: 800px;
 }

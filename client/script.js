@@ -5,7 +5,7 @@ $(document).ready(function() {
     title : function() { return $(this).attr('id'); },
     trigger: 'manual',
     content: function () {
-      var $html = $('.popup-content');
+      var $html = $($('#popup-tpl').html());
       $html.find('[id^=content]').attr('id', 'content_' + $(this).attr('id'));
       $html.find('[id^=data]').attr('id', 'data_' + $(this).attr('id'));
       $html.find('[id^=delete]').attr('id', 'delete_' + $(this).attr('id'));

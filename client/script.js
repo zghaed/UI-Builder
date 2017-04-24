@@ -6,20 +6,21 @@ $(document).ready(function() {
     trigger: 'manual',
     content: function () {
       var $html = $('.popup-content');
-      $html.find('[id^=content]').attr('id', 'content-' + $(this).attr('id'));
-      $html.find('[id^=data]').attr('id', 'data-' + $(this).attr('id'));
+      $html.find('[id^=content]').attr('id', 'content_' + $(this).attr('id'));
+      $html.find('[id^=data]').attr('id', 'data_' + $(this).attr('id'));
+      $html.find('[id^=delete]').attr('id', 'delete_' + $(this).attr('id'));
       return $html.html();
     }
   };
 
   function fillContainers(data) {
-    if(!$('#content-' + data.id).data('cache'))
-      $('#content-' + data.id).data('cache', {id: data.id, ts: new Date()});
-    $('#content-' + data.id).on('change', function(e){
+    if(!$('#content_' + data.id).data('cache'))
+      $('#content_' + data.id).data('cache', {id: data.id, ts: new Date()});
+    $('#content_' + data.id).on('change', function(e){
       e.stopPropagation();
     }).val(data.containerTemplate).trigger('change');
-    $('#data-' + data.id).val(data.containerData);
-    $('#delete').removeClass('hide');
+    $('#data_' + data.id).val(data.containerData);
+    $('#delete_' + data.id).removeClass('hide');
   }
 
   function getDataById(id) {
@@ -77,17 +78,17 @@ $(document).ready(function() {
           var theCompiledHTML = theTemplate(jsonData);
           var newContainers = '<div class="group" style="order:' + boxes[i][j].groupNumber + ';" id= "'+ boxes[i][j].id +
            '" data-placement="bottom">' + theCompiledHTML + '</div>';
-          if (j < boxes[i].length-1)
+          if (j < boxes[i].length - 1)
             newContainers += middleAddElement;
           var second = boxId + '>div:eq(1)';
           $(second).after(newContainers);
-          $('#'+middleAddId).popover(popOverSettings)
+          $('#' + middleAddId).popover(popOverSettings)
             .on('click',function() {
               $(this).popover('toggle');
               $('.group').not(this).popover('hide');
               $('.add-element').not(this).popover('hide');
             });
-          $('#'+boxes[i][j].id).popover(popOverSettings)
+          $('#' + boxes[i][j].id).popover(popOverSettings)
             .on('click',function(event) {
 
               $('.group').not(this).popover('hide');
@@ -104,12 +105,12 @@ $(document).ready(function() {
           if (boxes[i][j].groupNumber >= maxOrder)
             maxOrder = boxes[i][j].groupNumber + 1;
         }
-        $(boxId).children(':first').css('order',  parseInt(minOrder)-1);
-        $(boxId).children().eq(1).css('order',  minOrder);
+        $(boxId).children(':first').css('order',  parseInt(minOrder) - 1);
+        $(boxId).children().eq(1).css('order', minOrder);
         if (boxes[i].length > 0) {
-          $(boxId).children(':last').css('order',  maxOrder);
+          $(boxId).children(':last').css('order', maxOrder);
         } else {
-          $(boxId).children(':last').css('display',  'none');
+          $(boxId).children(':last').css('display', 'none');
         }
       }
     },
@@ -131,8 +132,9 @@ $(document).ready(function() {
   }
 
   $('.box').on('click', '#apply-button', function(){
-    var theTemplateScript = $('#content').val();
-    var inputData = $('#data').val();
+    var popOverId = $('.popover-title').html();
+    var theTemplateScript = $('#content_' + popOverId).val();
+    var inputData = $('#data_' + popOverId).val();
     var jsonData = (inputData === "") ? "" : JSON.parse(inputData);
     var preCompiledTemplateScript;
     if (Array.isArray(jsonData)) {
@@ -151,20 +153,20 @@ $(document).ready(function() {
         addIdArray.pop();
       }
       var boxName = addIdArray.join('_');
-      var boxElement = $('#'+boxName);
+      var boxElement = $('#' + boxName);
       var horizontal = 1;
       var groupNumber;
-      var addOrder = $('#'+addId).css('order');
+      var addOrder = $('#' + addId).css('order');
       if (location === 'start') {
         //None empty box
         groupNumber = parseInt(addOrder) - 1;
-        $('#'+addId).css('order', parseInt(addOrder) - 2);
+        $('#' + addId).css('order', parseInt(addOrder) - 2);
         var middleAddId = boxName + '_' + addOrder + '_middle';
         var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
          addOrder + ';">Add</div>';
-        $('#'+addId).after(middleAddElement);
-        $('#'+boxName).children(':first').css('order',  parseInt(addOrder) - 3);
-        $('#'+middleAddId).popover(popOverSettings)
+        $('#' + addId).after(middleAddElement);
+        $('#' + boxName).children(':first').css('order',  parseInt(addOrder) - 3);
+        $('#' + middleAddId).popover(popOverSettings)
           .on('click',function() {
             $(this).popover('toggle');
             $('.group').not(this).popover('hide');
@@ -172,7 +174,7 @@ $(document).ready(function() {
           });
       } else if (location === 'middle') {
         groupNumber = parseInt(addOrder) + 1;
-        $('#'+addId).css('order', addOrder);
+        $('#' + addId).css('order', addOrder);
         var middleAddOrder = parseInt(addOrder) + 2;
         var middleAddId = boxName + '_' + middleAddOrder + '_middle';
         var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
@@ -226,8 +228,8 @@ $(document).ready(function() {
             child.css('order', parseInt(child.css('order')) + 2);
           }//End of if for orders
         }//End of for
-        $('#'+addId).after(middleAddElement);
-        $('#'+middleAddId).popover(popOverSettings)
+        $('#' + addId).after(middleAddElement);
+        $('#' + middleAddId).popover(popOverSettings)
           .on('click',function() {
             $(this).popover('toggle');
             $('.group').not(this).popover('hide');
@@ -235,12 +237,12 @@ $(document).ready(function() {
           });
       } else {
         groupNumber = parseInt(addOrder) + 1;
-        $('#'+addId).css('order', parseInt(addOrder) + 2);
+        $('#' + addId).css('order', parseInt(addOrder) + 2);
         var middleAddId = boxName + '_'+ addOrder + '_middle';
         var middleAddElement = '<div class="add-element" id="' + middleAddId + '" data-placement="bottom" style="order:' +
          addOrder + ';">Add</div>';
-        $('#'+addId).after(middleAddElement);
-        $('#'+middleAddId).popover(popOverSettings)
+        $('#' + addId).after(middleAddElement);
+        $('#' + middleAddId).popover(popOverSettings)
           .on('click',function() {
             $(this).popover('toggle');
             $('.group').not(this).popover('hide');
@@ -260,13 +262,13 @@ $(document).ready(function() {
           var newDivString = '<div class="group" id="' + id + '" style="order:' + groupNumber + ';" data-placement="bottom" >' +
            theCompiledHTML + '</div>';
           if (location === 'start') {
-            $('#'+addId).after(newDivString);
+            $('#' + addId).after(newDivString);
           } else if (location === 'middle') {
-            $('#'+addId).after(newDivString);
+            $('#' + addId).after(newDivString);
           } else {
-            $(newDivString).insertBefore('#'+addId);
+            $(newDivString).insertBefore('#' + addId);
           }
-          $('#'+id).popover(popOverSettings)
+          $('#' + id).popover(popOverSettings)
             .on('click',function(event) {
               $('.group').not(this).popover('hide');
               $('.add-element').not(this).popover('hide');
@@ -303,7 +305,7 @@ $(document).ready(function() {
           }
           var theTemplate = Handlebars.compile(preCompiledTemplateScript);
           var theCompiledHTML = theTemplate(jsonData);
-          $('#'+$('.popover-title').html()).html(theCompiledHTML);
+          $('#' + $('.popover-title').html()).html(theCompiledHTML);
           $('.group').popover('hide');
         },
         error: function(data) {
@@ -322,9 +324,9 @@ $(document).ready(function() {
     }
     //TODO: Maybe I should update the UI in the success of AJAX request
     if (checkedValue === "true") {
-      $('#'+boxId).css('flex-direction', 'row');
+      $('#' + boxId).css('flex-direction', 'row');
     } else if (checkedValue === "false") {
-      $('#'+boxId).css('flex-direction', 'column');
+      $('#' + boxId).css('flex-direction', 'column');
     }
     var updateParams = 'horizontal=' + checkedValue;
     $.ajax({
@@ -343,21 +345,21 @@ $(document).ready(function() {
 
   $('.box').on('click', '#delete', function(event) {
     var id = $('.popover-title').html();
-    var addOrder = parseInt($('#'+id).css('order')) - 1;
-    var parentId = $('#'+id).parent().attr('id');
+    var addOrder = parseInt($('#' + id).css('order')) - 1;
+    var parentId = $('#' + id).parent().attr('id');
     var addElement = parentId + '_' + addOrder + '_middle';
-    if ($('#'+addElement).length) {
-     $('#'+addElement).remove();
+    if ($('#' + addElement).length) {
+     $('#' + addElement).remove();
     } else {
       addElement = parentId + '_start';
-      $('#'+addElement).remove();
-      //$('#'+parentId).children().eq(1).attr('id', addElement);
+      $('#' + addElement).remove();
+      //$('#' + parentId).children().eq(1).attr('id', addElement);
     }
     $.ajax({
       type: 'POST',
       url: 'http://localhost:8000/api/container/delete/'+id,
       success: function(data) {
-        $('#'+id).remove();
+        $('#' + id).remove();
       },
       error: function(data) {
         alert('There was an error deleting the container!');

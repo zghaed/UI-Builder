@@ -62,8 +62,8 @@
   right: 1em;*/
 }
 
-#preview {
-  order: 5;
+#switch {
+  order: 0;
 }
 
 .add-element {

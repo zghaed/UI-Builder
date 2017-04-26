@@ -343,7 +343,7 @@ $(document).ready(function() {
     });
   });
 
-  $('.box').on('click', '#delete', function(event) {
+  $('.box').on('click', '[id^=delete]', function(event) {
     var id = $('.popover-title').html();
     var addOrder = parseInt($('#' + id).css('order')) - 1;
     var parentId = $('#' + id).parent().attr('id');
